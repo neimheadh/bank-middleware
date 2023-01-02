@@ -1,0 +1,54 @@
+services:
+    admin.account.account:
+        class: App\Admin\Account\AccountAdmin
+        tags:
+            - name: sonata.admin
+              model_class: App\Entity\Account\Account
+              controller: ~
+              manager_type: orm
+              label: Account
+              group: Account
+              on_top: true
+
+    admin.transaction.transaction:
+        class: App\Admin\Transaction\TransactionAdmin
+        tags:
+            - name: sonata.admin
+              model_class: App\Entity\Transaction\Transaction
+              controller: ~
+              manager_type: orm
+              group: Transaction
+              label: Transaction
+              on_top: true
+
+    admin.localization.currency:
+      class: App\Admin\Localization\CurrencyAdmin
+      tags:
+        - name: sonata.admin
+          model_class: App\Entity\Localization\Currency
+          controller: ~
+          manager_type: orm
+          group: Localization
+          label: Currency
+
+    admin.dealer.dealer:
+      class: App\Admin\Dealer\DealerAdmin
+      tags:
+        - name: sonata.admin
+          model_class: App\Entity\Dealer\Dealer
+          controller: ~
+          manager_type: orm
+          group: Dealer
+          label: Dealer
+          on_top: true
+
+    admin.budget.budget:
+      class: App\Admin\Budget\BudgetAdmin
+      tags:
+        - name: sonata.admin
+          model_class: App\Entity\Budget\Budget
+          controller: ~
+          manager_type: orm
+          group: Budget
+          label: Budget
+          on_top: true

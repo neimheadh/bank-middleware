@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+DIR=$(dirname ${BASH_SOURCE[0]})
+source "$DIR/.common"
+cd "$DIR/.."
+
+cmd docker-compose -f docker-compose.yml -f docker-compose.build.yml build
+cmd docker-compose run --rm php bin/install php
+cmd docker-compose run --rm node bin/install js
+cmd docker-compose up -d

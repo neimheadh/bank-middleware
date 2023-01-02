@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# This script install the application in the final environment.
+
+set -e
+DIR=$(dirname ${BASH_SOURCE[0]})
+source "$DIR/.common"
+cd "$DIR/.."
+
+AVAILABLE_ENVIRONMENTS="php js"
+ENVIRONMENTS=""
+
+usage() {
+  echo "Install Bank Middleware application."
+  echo
+  echo "Usage: $0 ([environment]) ([options])"
+  echo "Arguments:"
+  echo "- environment: Built environment (available: \033[33m$AVAILABLE_ENVIRONMENTS\033[0m)"
+  echo "Options:"
+  echo "  -h|--help   Show this help and exit."
+}
+
+# Parse options/arguments
+while [ $# -gt 0 ]; do
+  case $1 in
+    -h|--help)
+      usage
+      exit
+      ;;
+    -*)
+      error "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      ENVIRONMENTS="$ENVIRONMENTS $1"
+      ;;
+  esac
+  shift
+done
+
+if [ "$ENVIRONMENTS" == "" ]; then
+  ENVIRONMENTS=$AVAILABLE_ENVIRONMENTS
+fi
+
+for ENVIRONMENT in $ENVIRONMENTS; do
+  case $ENVIRONMENT in
+    php)
+      title "Build environment \033[33mphp\033[0m"
+      cmd composer install --no-scripts
+      cmd bin/console assets:install --symlink --relative
+      cmd bin/console doctrine:database:create --if-not-exists
+      #cmd bin/console doctrine:migration:migrate --no-interaction
+      cmd bin/console doctrine:schema:update --force
+      ;;
+    js)
+      title "Build environment \033[33mjs\033[0m"
+      cmd yarn install
+      ;;
+    *)
+      error "Unknown environment $ENVIRONMENT"
+      ;;
+  esac
+done

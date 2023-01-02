@@ -1,0 +1,90 @@
+#!/bin/sh
+_echo() {
+	args="-e"
+	color=$1
+	shift
+
+	if [ "$1" = "-n" ]; then
+		shift
+		printf "%b" "$color$*\033[0m"
+	else
+	    printf "%b\n" "$color$*\033[0m"
+	fi
+}
+
+load_env() {
+	if [ -f .env ]; then
+	    set +e
+		while read -r line; do
+			eval "$line"
+		done < .env
+		set -e
+	fi
+}
+
+info() {
+	_echo "\033[34m" "$@"
+}
+
+title() {
+	surline=1
+
+	if [ "$1" == "-n" ]; then
+		shift
+		surline=0
+	fi
+
+    args=$*
+	length=$(( ${#args} + 1 ))
+
+	echo
+	_echo "\033[32m" "$@"
+	if [ "$surline" -eq 1 ]; then
+		if ! command -v seq &> /dev/null; then
+			_echo "\033[32m" "---"
+		else
+			_echo "\033[32m" "$(seq -s- $length | tr -d '[:digit:]')"
+		fi
+    	echo
+	fi
+}
+
+echo_cmd() {
+	_echo "\033[36m" "$@"
+}
+
+cmd() {
+	echo_cmd "$@"
+	eval "$@"
+}
+
+success() {
+	_echo "\033[32m" "$@"
+}
+
+error() {
+	_echo "\033[31m" "$@"
+}
+
+diff_env() {
+	model=$1
+	file=$2
+
+	_WS=""
+	while read line || [ -n "$line" ]; do
+		if [[ "$line" =~ ^[^=]+=.+ ]]; then
+			_VAR=$(echo "$line" | sed 's/^\([^=]\+\)=.*/\1/g')
+			if [ "$(grep -o "^$_VAR" $file)" == "" ]; then
+				echo -n "$_WS"
+				echo -n "$line"
+				_WS=$'\n'
+			fi
+		else 
+			if [ "$(grep -o "$line" .env)" == "" ]; then
+				echo -n "$_WS"
+				echo -n "$line"
+				_WS=$'\n'
+			fi 
+		fi
+	done < $model
+}
