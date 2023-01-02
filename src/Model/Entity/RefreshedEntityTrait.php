@@ -44,20 +44,14 @@ trait RefreshedEntityTrait
         // Not refreshed if not in the start-end period.
         if (($this->endAt !== null && $now > $this->endAt)
           || $now < $this->startAt
-          || $this->periodicity === PeriodicEntityInterface::UNKNOWN
+          || $this->periodicity === null
         ) {
             return false;
         }
 
         $next = clone($this->refreshedAt);
         $next->add(
-          DateInterval::createFromDateString(match ($this->periodicity) {
-              PeriodicEntityInterface::HOURLY => '1 hour',
-              PeriodicEntityInterface::DAILY => '1 day',
-              PeriodicEntityInterface::WEEKLY => '1 week',
-              PeriodicEntityInterface::MONTHLY => '1 month',
-              PeriodicEntityInterface::YEARLY => '1 year',
-          })
+          DateInterval::createFromDateString($this->periodicity)
         );
 
         return $now > $next;

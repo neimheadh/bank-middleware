@@ -13,18 +13,19 @@ trait PeriodicEntityTrait
     /**
      * Entity periodicity.
      *
-     * @var int
+     * @var string
      */
     #[ORM\Column(
-      type: 'smallint',
-      options: ['default' => PeriodicEntityInterface::UNKNOWN]
+      type: 'string',
+      length: 100,
+      nullable: true,
     )]
-    private int $periodicity = PeriodicEntityInterface::UNKNOWN;
+    private ?string $periodicity = null;
 
     /**
      * {@inheritDoc}
      */
-    public function getPeriodicity(): int
+    public function getPeriodicity(): ?string
     {
         return $this->periodicity;
     }
@@ -32,7 +33,7 @@ trait PeriodicEntityTrait
     /**
      * {@inheritDoc}
      */
-    public function setPeriodicity(int $periodicity): self
+    public function setPeriodicity(?string $periodicity): self
     {
         $this->periodicity = $periodicity;
         return $this;

@@ -1,0 +1,7 @@
+periodicity:
+  period:
+    hourly: Hour
+    daily: Day
+    weekly: Week
+    monthly: Month
+    yearly: Year

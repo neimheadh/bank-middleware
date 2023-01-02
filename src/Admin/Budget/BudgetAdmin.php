@@ -4,6 +4,7 @@ namespace App\Admin\Budget;
 
 use App\Admin\AbstractAdmin;
 use App\Entity\Budget\Budget;
+use App\Form\Type\PeriodicityType;
 use App\Model\Entity\PeriodicEntityInterface;
 use App\Model\Security\RoleEnum;
 use DateTime;
@@ -73,8 +74,8 @@ class BudgetAdmin extends AbstractAdmin
           ->add('amount')
           ->add('currency')
           // @todo Change with a specific periodicity field type.
-          ->add('periodicity', ChoiceType::class, [
-            'choices' => PeriodicEntityInterface::PERIODICITY,
+          ->add('periodicity', PeriodicityType::class, [
+            PeriodicityType::OPTION_PERIOD => PeriodicityType::PERIOD_MONTHLY,
           ])
           ->add('startAt', DatePickerType::class, [
             'required' => false,

@@ -5,6 +5,7 @@ namespace App\Lifecycle\Entity;
 use App\Model\Entity\RefreshedEntityInterface;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\Persistence\ObjectManager;
+use DateTime;
 
 /**
  * Refreshed entities lifecycle listener.
@@ -42,6 +43,7 @@ class RefreshedEntityLifecycleListener
     ): void {
         if ($entity->needRefresh()) {
             $entity->refresh();
+            $entity->setRefreshedAt(new DateTime());
             $manager->persist($entity);
         }
     }
