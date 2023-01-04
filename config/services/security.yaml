@@ -1,0 +1,21 @@
+services:
+  App\Security\Authorization\Voter\OwnedEntityAclVoter:
+    autowire: true
+    arguments:
+      $aclProvider: '@security.acl.provider'
+      $oidRetrievalStrategy: '@security.acl.object_identity_retrieval_strategy'
+      $sidRetrievalStrategy: '@security.acl.security_identity_retrieval_strategy'
+      $permissionMap: '@security.acl.permission.map'
+      $logger: '@logger'
+      $adminPool: '@sonata.admin.pool'
+      $security: '@security.helper'
+    tags:
+      - name: security.voter
+        priority: 255
+
+  App\Security\EventListener\ORM\OwnedEntityFilter:
+    autowire: true
+    tags:
+      - name: kernel.event_listener
+        event: sonata.admin.event.configure.query
+        method: filterSonataQueries

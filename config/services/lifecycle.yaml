@@ -6,7 +6,6 @@ services:
       - name: doctrine.event_listener
         event: preUpdate
 
-
   App\Lifecycle\Entity\RefreshedEntityLifecycleListener:
     tags:
       - name: doctrine.event_listener
