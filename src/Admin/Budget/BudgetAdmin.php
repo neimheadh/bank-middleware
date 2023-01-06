@@ -5,96 +5,49 @@ namespace App\Admin\Budget;
 use App\Admin\AbstractAdmin;
 use App\Entity\Budget\Budget;
 use App\Form\Type\PeriodicityType;
-use App\Model\Entity\PeriodicEntityInterface;
-use App\Model\Security\RoleEnum;
+use App\Model\Admin\AmountedEntityAdminTrait;
+use App\Model\Admin\BalancedEntityAdminTrait;
+use App\Model\Admin\DatedEntityAdminTrait;
+use App\Model\Admin\NamedEntityAdminTrait;
+use App\Model\Admin\PeriodEntityAdminTrait;
+use App\Model\Admin\PeriodicEntityAdminTrait;
+use App\Model\Admin\RefreshedEntityAdminTrait;
+use App\Model\Admin\User\OwnedEntityAdminTrait;
 use DateTime;
-use JsonException;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
-use Sonata\Form\Type\DatePickerType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * Budget admin configurator.
  */
-class BudgetAdmin extends AbstractAdmin
+final class BudgetAdmin extends AbstractAdmin
 {
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function configureDatagridFilters(DatagridMapper $filter): void
-    {
-        $filter
-          ->add('name')
-          ->add('createdAt')
-          ->add('updatedAt');
-    }
+    use AmountedEntityAdminTrait;
+    use BalancedEntityAdminTrait;
+    use DatedEntityAdminTrait;
+    use NamedEntityAdminTrait;
+    use OwnedEntityAdminTrait;
+    use PeriodEntityAdminTrait;
+    use PeriodicEntityAdminTrait;
+    use RefreshedEntityAdminTrait;
 
     /**
      * {@inheritDoc}
      */
-    protected function configureListFields(ListMapper $list): void
-    {
-        $list
-          ->add('name');
-
-        try {
-            if ($this->isGranted(RoleEnum::ROLE_SUPER_ADMIN->value)) {
-                $list->add('owner');
-            }
-        } catch (JsonException) {
-        }
-
-        $list
-          // @todo Display periodicity string.
-          ->add('periodicity')
-          ->add('startAt')
-          ->add('endAt')
-          ->add('amount')
-          ->add('balance')
-          ->add(ListMapper::NAME_ACTIONS, null, [
-            'actions' => [
-              'show' => [],
-              'edit' => [],
-              'delete' => [],
-            ],
-          ]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function configureFormFields(FormMapper $form): void
-    {
-        $form
-          ->add('name')
-          ->add('amount')
-          ->add('currency')
-          // @todo Change with a specific periodicity field type.
-          ->add('periodicity', PeriodicityType::class, [
-            PeriodicityType::OPTION_PERIOD => PeriodicityType::PERIOD_MONTHLY,
-          ])
-          ->add('startAt', DatePickerType::class, [
-            'required' => false,
-          ])
-          ->add('endAt', DatePickerType::class, [
-            'required' => false,
-          ]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function configureShowFields(ShowMapper $show): void
-    {
-        $show
-          ->add('id')
-          ->add('name')
-          ->add('createdAt')
-          ->add('updatedAt');
+    protected function configureFields(
+      FormMapper|DatagridMapper|ListMapper|ShowMapper $mapper
+    ): void {
+        $this->addNameField($mapper)
+          ->addPeriodFields($mapper)
+          ->addPeriodicityField($mapper)
+          ->addOwnerField($mapper)
+          ->addBalanceField($mapper)
+          ->addAmountField($mapper)
+          ->addLifecycleDateFields($mapper)
+          ->addLastRefreshDateField($mapper);
     }
 
     /**
@@ -115,7 +68,7 @@ class BudgetAdmin extends AbstractAdmin
         $budget->setStartAt($start);
 
         // Periodicity at monthly by default.
-        $budget->setPeriodicity(PeriodicEntityInterface::MONTHLY);
+        $budget->setPeriodicity('1 ' . PeriodicityType::PERIOD_MONTHLY);
 
         return $budget;
     }

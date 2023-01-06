@@ -105,4 +105,5 @@ class OwnedEntityAclVoter extends AclVoter
 
         return self::ACCESS_GRANTED;
     }
+
 }

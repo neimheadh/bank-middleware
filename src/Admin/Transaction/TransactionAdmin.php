@@ -6,14 +6,15 @@ namespace App\Admin\Transaction;
 
 use App\Admin\AbstractAdmin;
 use App\Entity\Transaction\Transaction;
-use App\Model\Security\RoleEnum;
+use App\Model\Admin\BalancedEntityAdminTrait;
+use App\Model\Admin\DatedEntityAdminTrait;
+use App\Model\Admin\NamedEntityAdminTrait;
+use App\Model\Admin\UidEntityAdminTrait;
 use DateTime;
-use JsonException;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
-use Sonata\Form\Type\DatePickerType;
 
 /**
  * Transaction admin configurator.
@@ -21,81 +22,28 @@ use Sonata\Form\Type\DatePickerType;
 final class TransactionAdmin extends AbstractAdmin
 {
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function configureDatagridFilters(DatagridMapper $filter): void
-    {
-        $filter
-          ->add('recordDate')
-          ->add('transactionDate')
-          ->add('name')
-          ->add('balance')
-          ->add('uid');
-    }
+    use BalancedEntityAdminTrait;
+    use DatedEntityAdminTrait;
+    use NamedEntityAdminTrait;
+    use UidEntityAdminTrait;
 
     /**
      * {@inheritDoc}
      */
-    protected function configureListFields(ListMapper $list): void
-    {
-        $list
-          ->add('recordDate')
-          ->add('transactionDate')
-          ->add('account');
+    protected function configureFields(
+      FormMapper|DatagridMapper|ListMapper|ShowMapper $mapper
+    ): void {
+        $mapper->add('recordDate')
+          ->add('transactionDate');
 
-        try {
-            if ($this->isGranted(RoleEnum::ROLE_SUPER_ADMIN->value)) {
-                $list->add('owner');
-            }
-        } catch (JsonException) {}
+        $this
+          ->addUidField($mapper)
+          ->addNameField($mapper);
 
-        $list->add('dealer')
-          ->add('name')
-          ->add('balance')
-          ->add('uid')
-          ->add('createdAt')
-          ->add('updatedAt')
-          ->add(ListMapper::NAME_ACTIONS, null, [
-            'actions' => [
-              'show' => [],
-              'edit' => [],
-              'delete' => [],
-            ],
-          ]);
-    }
+        $mapper->add('dealer');
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function configureFormFields(FormMapper $form): void
-    {
-        $form
-          ->add('recordDate', DatePickerType::class)
-          ->add('transactionDate', DatePickerType::class, [
-            'required' => false,
-          ])
-          ->add('account')
-          ->add('budget')
-          ->add('name')
-          ->add('balance')
-          ->add('dealer')
-          ->add('uid');
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function configureShowFields(ShowMapper $show): void
-    {
-        $show
-          ->add('recordDate')
-          ->add('transactionDate')
-          ->add('id')
-          ->add('name')
-          ->add('balance')
-          ->add('uid')
-          ->add('currency');
+        $this->addBalanceField($mapper)
+          ->addLifecycleDateFields($mapper);
     }
 
     /**

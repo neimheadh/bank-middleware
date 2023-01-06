@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Entity with start & end date trait.
  */
-trait StartEndDateEntityTrait
+trait PeriodEntityTrait
 {
 
     /**

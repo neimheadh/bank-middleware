@@ -18,8 +18,8 @@ use App\Model\Entity\NamedEntityTrait;
 use App\Model\Entity\PeriodicEntityTrait;
 use App\Model\Entity\RefreshedEntityInterface;
 use App\Model\Entity\RefreshedEntityTrait;
-use App\Model\Entity\StartEndDateEntityInterface;
-use App\Model\Entity\StartEndDateEntityTrait;
+use App\Model\Entity\PeriodEntityInterface;
+use App\Model\Entity\PeriodEntityTrait;
 use App\Model\Entity\Transaction\TransactionEntityMapInterface;
 use App\Model\Entity\Transaction\TransactionEntityMapTrait;
 use App\Model\Entity\User\OwnedEntityInterface;
@@ -38,7 +38,7 @@ class Budget implements EntityInterface,
                         NamedEntityInterface,
                         BalancedEntityInterface,
                         TransactionEntityMapInterface,
-                        StartEndDateEntityInterface,
+                        PeriodEntityInterface,
                         CurrencyEntityMapInterface,
                         AmountedEntityInterface,
                         RefreshedEntityInterface,
@@ -52,11 +52,11 @@ class Budget implements EntityInterface,
     use TransactionEntityMapTrait {
         TransactionEntityMapTrait::__construct as private _initTransactions;
     }
-    use StartEndDateEntityTrait;
+    use PeriodEntityTrait;
     use CurrencyEntityMapTrait;
     use AmountedEntityTrait;
     use PeriodicEntityTrait;
-    use StartEndDateEntityTrait;
+    use PeriodEntityTrait;
     use RefreshedEntityTrait {
         RefreshedEntityTrait::__construct as private _initRefreshed;
     }

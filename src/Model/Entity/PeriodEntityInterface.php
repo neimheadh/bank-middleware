@@ -7,7 +7,7 @@ use DateTimeInterface;
 /**
  * Entity with start & end date.
  */
-interface StartEndDateEntityInterface
+interface PeriodEntityInterface
 {
 
     /**

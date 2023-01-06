@@ -17,6 +17,26 @@ class AbstractAdmin extends BaseAbstractAdmin
 {
 
     /**
+     * Add actions to list mapper.
+     *
+     * @param ListMapper $list List mapper.
+     *
+     * @return $this
+     */
+    protected function addListActions(ListMapper $list): self
+    {
+        $list->add(ListMapper::NAME_ACTIONS, null, [
+          'actions' => [
+            'show' => [],
+            'edit' => [],
+            'delete' => [],
+          ],
+        ]);
+
+        return $this;
+    }
+
+    /**
      * Configure admin datagrid filters.
      *
      * @param DatagridMapper $filter Datagrid mapper.
@@ -25,9 +45,7 @@ class AbstractAdmin extends BaseAbstractAdmin
      */
     protected function configureDatagridFilters(DatagridMapper $filter): void
     {
-        parent::configureDatagridFilters(
-          $filter
-        );
+        $this->configureFields($filter);
     }
 
     /**
@@ -39,9 +57,21 @@ class AbstractAdmin extends BaseAbstractAdmin
      */
     protected function configureListFields(ListMapper $list): void
     {
-        parent::configureListFields(
-          $list
-        );
+        $this->configureFields($list);
+        $this->addListActions($list);
+    }
+
+    /**
+     * Configure admin fields.
+     *
+     * @param DatagridMapper|FormMapper|ListMapper|ShowMapper $mapper Mapper.
+     *
+     * @return void
+     */
+    protected function configureFields(
+      DatagridMapper|FormMapper|ListMapper|ShowMapper $mapper
+    ): void {
+
     }
 
     /**
@@ -53,9 +83,7 @@ class AbstractAdmin extends BaseAbstractAdmin
      */
     protected function configureFormFields(FormMapper $form): void
     {
-        parent::configureFormFields(
-          $form
-        );
+        $this->configureFields($form);
     }
 
     /**
@@ -67,9 +95,7 @@ class AbstractAdmin extends BaseAbstractAdmin
      */
     protected function configureShowFields(ShowMapper $show): void
     {
-        parent::configureShowFields(
-          $show
-        );
+        $this->configureFields($show);
     }
 
     /**

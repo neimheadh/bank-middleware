@@ -74,7 +74,6 @@ class PeriodicityType extends AbstractType implements DataTransformerInterface
           'label' => false,
         ])->add('period', ChoiceType::class, [
           'choices' => $options[self::OPTION_PERIODS],
-          'data' => $options[self::OPTION_PERIOD],
           'label' => false,
         ])->addModelTransformer($this);
     }

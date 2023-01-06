@@ -8,7 +8,7 @@ use DateTimeInterface;
  * Refreshed entity.
  */
 interface RefreshedEntityInterface extends PeriodicEntityInterface,
-                                           StartEndDateEntityInterface
+                                           PeriodEntityInterface
 {
 
     /**
@@ -35,7 +35,7 @@ interface RefreshedEntityInterface extends PeriodicEntityInterface,
     /**
      * Set last refresh date.
      *
-     * @param DateTimeInterface|null $date Last refresh date.
+     * @param DateTimeInterface $date Last refresh date.
      *
      * @return $this
      */
