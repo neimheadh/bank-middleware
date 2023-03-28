@@ -1,0 +1,20 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Import\:
+    resource: '../../src/Import/*'
+    exclude:  '../../src/Import/{Parser,Exception}'
+
+  App\Import\Processor\:
+    resource: '../../src/Import/Processor/*'
+    public: true
+
+  App\Import\Reader\:
+    resource: '../../src/Import/Reader/*'
+    public: true
+
+  App\Import\Writer\:
+    resource: '../../src/Import/Writer/*'
+    public: true

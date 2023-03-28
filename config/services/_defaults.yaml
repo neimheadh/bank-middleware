@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\:
+    resource: '../../src/*'
+    exclude: '../../src/{Kernel.php,Entity}'
+
+  Doctrine\Persistence\ObjectManager:
+    alias: 'doctrine.orm.default_entity_manager'
+
+  Symfony\Component\DependencyInjection\ContainerInterface:
+    alias: service_container

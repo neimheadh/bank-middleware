@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# This script launch a bash console into your containers.
+
+set -e
+DIR=$(dirname ${BASH_SOURCE[0]})
+source "$DIR/.common"
+cd "$DIR/.."
+
+CONTAINER="php"
+
+if [ "$#" -gt 0 ]; then
+    CONTAINER=$1
+fi
+
+cmd docker-compose exec $CONTAINER bash

@@ -5,8 +5,11 @@ FROM php:${PHP_VERSION}-fpm
 RUN apt-get update \
  && apt-get install -y \
         git \
-        zip \
         libpq-dev \
+        libzip-dev \
+        libicu-dev \
+        libsqlite3-dev \
+        unzip \
  && rm -Rf /var/lib/apt/lists/*
 
 # Install composer
@@ -18,7 +21,7 @@ RUN curl -o composer-setup.php https://getcomposer.org/installer \
  && composer --version
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql
+RUN docker-php-ext-install pdo pdo_pgsql zip intl pdo_sqlite
 
 # Configure environment
 ARG USER_ID=1000

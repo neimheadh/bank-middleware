@@ -1,0 +1,11 @@
+parameters:
+  env(CURRENCYAPI_API_KEY): ''
+
+services:
+  _defaults:
+    autoconfigure: true
+    autowire: true
+
+  App\Api\Currency\CurrencyApiManager:
+    arguments:
+      $apiKey: '%env(resolve:CURRENCYAPI_API_KEY)%'

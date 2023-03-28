@@ -1,0 +1,7 @@
+parameters:
+  app.event.listener.doctrine.dir: '%kernel.project_dir%/src/Event/Listener/ORM'
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true

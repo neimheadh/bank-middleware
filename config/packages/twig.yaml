@@ -1,8 +1,8 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+
     form_themes:
-        - '@SonataForm/Form/datepicker.html.twig'
-        - 'Form/periodicity.html.twig'
+        - 'form/array.html.twig'
 
 when@test:
     twig:

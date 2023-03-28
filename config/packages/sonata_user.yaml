@@ -1,7 +1,0 @@
-sonata_user:
-  class:
-    user: App\Entity\User\User
-  resetting:
-    email:
-      address: admin@example.com
-      sender_name: Bank Middleware Administrator

@@ -1,0 +1,42 @@
+{#
+    App\Form\Type\Mode\ArrayType template.
+#}
+
+{% block app_array_row %}
+    <div>
+        {{ form_row(form) }}
+    </div>
+{% endblock app_array_row %}
+
+{% block app_array_widget %}
+    <table class="table table-responsive table-striped box-primary">
+        <thead class="bg-primary">
+            <tr>
+                <th>{{ name_label | trans({}, form.vars.translation_domain) }}</th>
+                <th>{{ type_label | trans({}, form.vars.translation_domain) }}</th>
+                <th>{{ value_label | trans({}, form.vars.translation_domain) }}</th>
+                <th class="cell-minimal"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for name, child in form.children %}
+                {% if name matches '/^\\d+$/' %}
+                    <tr>
+                        <td>{{ form_widget(child.name) }}</td>
+                        <td>{{ form_widget(child.type) }}</td>
+                        <td>{{ form_widget(child.value) }}</td>
+                        <td class="cell-minimal">{{ form_widget(child.remove, {attr:{class: 'btn btn-danger'}}) }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" class="align-right">
+                    {{ form_widget(form.add, {attr:{class: 'btn btn-primary'}}) }}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    {{ form_end(form) }}
+{% endblock app_array_widget %}

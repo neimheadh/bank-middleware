@@ -1,0 +1,25 @@
+Profile:
+  form:
+    group:
+      Profile: Profil d'import
+    label:
+      configuration: Configuration
+      code: Code unique
+      name: Nom du profil
+      reader: Reader
+      processor: Processeur
+      writer: Writer
+    choice:
+      type:
+        file: Import de fichier
+
+  list:
+    label:
+      code: Code
+      name: Nom
+      processor: Processeur
+      processorOptions: ~
+      reader: Reader
+      readerOptions: ~
+      writer: Writer
+      writerOptions: ~
