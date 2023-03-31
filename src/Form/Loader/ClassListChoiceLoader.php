@@ -22,9 +22,12 @@ class ClassListChoiceLoader implements ChoiceLoaderInterface
 
     /**
      * @param string $namespace Classes namespace.
+     * @param int    $depth     How deep we should go into the namespace dir.
+     *                          Negative value means no limit.
      */
     public function __construct(
-        private readonly string $namespace
+        private readonly string $namespace,
+        private readonly int $depth = -1
     ) {
     }
 
@@ -125,12 +128,16 @@ class ClassListChoiceLoader implements ChoiceLoaderInterface
                 substr($namespace, strlen($psr4Namespace))
             );
 
-        /** @var iterable<string, SplFileInfo> $files */
-        $files = Finder::create()
+        $finder = Finder::create()
             ->in($directory)
             ->files()
-            ->name('*.php')
-            ->getIterator();
+            ->name('*.php');
+
+        if ($this->depth >= 0) {
+            $finder->depth("<= $this->depth");
+        }
+        /** @var iterable<string, SplFileInfo> $files */
+        $files = $finder->getIterator();
         $classes = [];
 
         foreach ($files as $file) {
@@ -152,36 +159,6 @@ class ClassListChoiceLoader implements ChoiceLoaderInterface
 
         return $classes;
     }
-
-    /**
-     * List PHP files having given namespace.
-     *
-     * @param string $namespace The namespace.
-     *
-     * @return iterable<SplFileObject>
-     */
-    private function findFiles(string $namespace): iterable
-    {
-        $files = [];
-
-        foreach ($this->findPsr4Directories($namespace) as $directory) {
-            $files = array_merge(
-                $files,
-                array_values(
-                    iterator_to_array(
-                        Finder::create()
-                            ->in($directory)
-                            ->files()
-                            ->name('*.php')
-                            ->getIterator()
-                    )
-                )
-            );
-        }
-
-        return $files;
-    }
-
 
     /**
      * Get the PSR4 directory for the given namespace.

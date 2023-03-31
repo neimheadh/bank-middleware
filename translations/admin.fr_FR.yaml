@@ -3,12 +3,14 @@ Profile:
     group:
       Profile: Profil d'import
     label:
-      configuration: Configuration
       code: Code unique
       name: Nom du profil
-      reader: Reader
       processor: Processeur
+      processorConfiguration: Configuration processeur
+      reader: Reader
+      readerConfiguration: Configuration reader
       writer: Writer
+      writerConfiguration: Configuration writer
     choice:
       type:
         file: Import de fichier
@@ -18,8 +20,8 @@ Profile:
       code: Code
       name: Nom
       processor: Processeur
-      processorOptions: ~
+      processorConfiguration: Configuration processeur
       reader: Reader
-      readerOptions: ~
+      readerConfiguration: Configuration reader
       writer: Writer
-      writerOptions: ~
+      writerConfiguration: Configuration writer

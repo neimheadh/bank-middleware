@@ -22,6 +22,7 @@ class CsvFileReader extends AbstractReader
         self::OPTION_ENCLOSURE => '"',
         self::OPTION_ESCAPE => '\\',
         self::OPTION_HEADED => true,
+        self::OPTION_PROGRESS_BAR => null,
         self::OPTION_SEPARATOR => ',',
     ];
 
@@ -39,6 +40,11 @@ class CsvFileReader extends AbstractReader
      * Is the CSV headed option name.
      */
     public const OPTION_HEADED = 'headed';
+
+    /**
+     * Progress bar option.
+     */
+    public const OPTION_PROGRESS_BAR = 'progress';
 
     /**
      * Separator character option name.
@@ -65,12 +71,16 @@ class CsvFileReader extends AbstractReader
             ? new SplFileObject($input, 'r')
             : $input;
 
+        $options[self::OPTION_PROGRESS_BAR]?->start();
+        $options[self::OPTION_PROGRESS_BAR]?->advance();
+
         return new CsvFileIterator(
             file: $input,
             separator: $options[self::OPTION_SEPARATOR],
             enclosure: $options[self::OPTION_ENCLOSURE],
             escape: $options[self::OPTION_ESCAPE],
-            headed: $options[self::OPTION_HEADED]
+            headed: $options[self::OPTION_HEADED],
+            progress: $options[self::OPTION_PROGRESS_BAR],
         );
     }
 

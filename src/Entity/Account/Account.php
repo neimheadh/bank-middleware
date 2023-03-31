@@ -32,16 +32,12 @@ class Account implements EntityInterface,
     use BalancedEntityTrait;
     use CodeEntityTrait;
 
-    public function __construct()
-    {
-        $this->balance = 0;
-    }
-
     /**
      * Account code.
      *
      * @var string|null
      */
+    #[Sonata\FormField(position: 2)]
     #[ORM\Column(type: 'string', length: 256, nullable: true)]
     private ?string $code = null;
 
@@ -50,7 +46,12 @@ class Account implements EntityInterface,
      *
      * @var string|null
      */
+    #[Sonata\FormField(position: 1)]
     #[ORM\Column(type: 'string', length: 256, options: ['default' => ''])]
     private ?string $name = null;
 
+    public function __construct()
+    {
+        $this->balance = 0;
+    }
 }

@@ -16,6 +16,11 @@ class ClassChoiceType extends AbstractType
 {
 
     /**
+     * How deep the namespace directory is parsed option name.
+     */
+    public const OPTION_DEPTH = 'depth';
+
+    /**
      * Namespace option name.
      */
     public const OPTION_NAMESPACE = 'namespace';
@@ -32,20 +37,29 @@ class ClassChoiceType extends AbstractType
             function (Options $options) {
                 return ChoiceList::loader(
                     $this,
-                    new ClassListChoiceLoader($options['namespace']),
-                    [$options['namespace']]
+                    new ClassListChoiceLoader(
+                        $options[self::OPTION_NAMESPACE],
+                        $options[self::OPTION_DEPTH]
+                    ),
+                    [
+                        $options[self::OPTION_NAMESPACE],
+                        $options[self::OPTION_DEPTH],
+                    ]
                 );
             }
         );
 
         $resolver->setRequired([self::OPTION_NAMESPACE]);
         $resolver->setAllowedTypes(self::OPTION_NAMESPACE, ['string']);
+
+        $resolver->setDefault(self::OPTION_DEPTH, -1);
+        $resolver->setAllowedTypes(self::OPTION_DEPTH, ['int']);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'app_class_choice';
     }

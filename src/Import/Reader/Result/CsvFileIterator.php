@@ -2,15 +2,24 @@
 
 namespace App\Import\Reader\Result;
 
+use App\Import\Monitoring\ProgressInterface;
 use Countable;
 use Iterator;
 use SplFileObject;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 /**
  * CSV file iterator.
  */
 class CsvFileIterator implements Countable, Iterator
 {
+
+    /**
+     * Currently read CSV line.
+     *
+     * @var int
+     */
+    private int $currentLine = 0;
 
     /**
      * End of file cursor.
@@ -34,13 +43,6 @@ class CsvFileIterator implements Countable, Iterator
     private ?array $header = null;
 
     /**
-     * Currently read CSV line.
-     *
-     * @var int
-     */
-    private int $currentLine = 0;
-
-    /**
      * Next CSV line cursor.
      *
      * @var int
@@ -56,6 +58,7 @@ class CsvFileIterator implements Countable, Iterator
      * @param int                  $bufferSize File reading buffer size.
      *                                         Used on CSV size count
      *                                         calculation.
+     * @param mixed                $progress   Progress bar.
      */
     public function __construct(
         string|SplFileObject $file,
@@ -64,6 +67,7 @@ class CsvFileIterator implements Countable, Iterator
         private readonly string $escape = '\\',
         private readonly bool $headed = true,
         private readonly int $bufferSize = 4096,
+        private readonly ProgressBar|ProgressInterface|null $progress = null,
     ) {
         $this->file = is_string($file)
             ? new SplFileObject($file, 'r')
@@ -132,6 +136,7 @@ class CsvFileIterator implements Countable, Iterator
     public function next(): void
     {
         $this->file->fseek($this->nextLine);
+        $this->progress?->advance();
         $this->currentLine++;
     }
 
@@ -144,6 +149,11 @@ class CsvFileIterator implements Countable, Iterator
         $this->nextLine = 0;
         $this->header = null;
         $this->currentLine = 0;
+
+        if ($this->progress) {
+            $this->progress->finish();
+            $this->progress->start($this->count());
+        }
     }
 
     /**

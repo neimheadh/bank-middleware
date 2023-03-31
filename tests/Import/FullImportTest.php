@@ -4,6 +4,10 @@ namespace App\Tests\Import;
 
 use App\Entity\Account\Account;
 use App\Entity\Account\Transaction;
+use App\Import\Monitoring\Event\ProgressAdvanceEvent;
+use App\Import\Monitoring\Event\ProgressFinishEvent;
+use App\Import\Monitoring\Event\ProgressStartEvent;
+use App\Import\Monitoring\EventProgress;
 use App\Import\Processor\DataMapProcessor;
 use App\Import\Reader\CsvFileReader;
 use App\Import\Writer\OrmWriter;
@@ -11,7 +15,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Iterator;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 
 /**
@@ -19,6 +25,59 @@ use Throwable;
  */
 class FullImportTest extends KernelTestCase
 {
+
+    /**
+     * Reading advance count.
+     *
+     * @var int
+     */
+    private int $advance = 0;
+
+    /**
+     * Event dispatcher.
+     *
+     * @var EventDispatcherInterface
+     */
+    private EventDispatcherInterface $dispatcher;
+
+    /**
+     * Reading finish count.
+     *
+     * @var int
+     */
+    private int $finish = 0;
+
+    /**
+     * Reading start count.
+     *
+     * @var int
+     */
+    private int $start = 0;
+
+    /**
+     * {@inheritDoc}
+     * @throws Exception
+     */
+    protected function setUp(): void
+    {
+        $this->dispatcher = static::getContainer()->get('event_dispatcher');
+
+        $this->start = 0;
+        $this->finish = 0;
+        $this->advance = 0;
+        $this->dispatcher->addListener(
+            ProgressAdvanceEvent::class,
+            fn() => $this->advance++
+        );
+        $this->dispatcher->addListener(
+            ProgressFinishEvent::class,
+            fn() => $this->finish++
+        );
+        $this->dispatcher->addListener(
+            ProgressStartEvent::class,
+            fn() => $this->start++
+        );
+    }
 
     /**
      * Test full import.
@@ -115,11 +174,17 @@ class FullImportTest extends KernelTestCase
         $readerOptions = Yaml::parseFile(
             __DIR__ . '/../Resources/import/bp.reader.config.yaml'
         );
+        $readerOptions[CsvFileReader::OPTION_PROGRESS_BAR] = new EventProgress(
+            $this->dispatcher
+        );
 
         $lines = $reader->read(
             __DIR__ . '/../Resources/import/bp.csv',
             $readerOptions
         );
+        $this->assertEquals(1, $this->start);
+        $this->assertEquals(1, $this->advance);
+        $this->assertEquals(0, $this->finish);
         $this->assertCount(8, $lines);
         $this->assertEquals(
             [
@@ -158,6 +223,9 @@ class FullImportTest extends KernelTestCase
             array_values($lines->current())
         );
         $lines->next();
+        $this->assertEquals(1, $this->start);
+        $this->assertEquals(2, $this->advance);
+        $this->assertEquals(0, $this->finish);
         $this->assertEquals(
             [
                 'Date de comptabilisation',
@@ -197,6 +265,9 @@ class FullImportTest extends KernelTestCase
         $this->assertEquals(1, $lines->key());
 
         $lines->rewind();
+        $this->assertEquals(2, $this->start);
+        $this->assertEquals(2, $this->advance);
+        $this->assertEquals(1, $this->finish);
         $this->assertEquals(0, $lines->key());
         return $lines;
     }
