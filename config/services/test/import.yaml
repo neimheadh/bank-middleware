@@ -2,8 +2,3 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
-    bind:
-      Symfony\Component\DependencyInjection\ContainerInterface: '@service_container'
-
-  App\Import\Configuration\ConfigurationReader:
-    public: true

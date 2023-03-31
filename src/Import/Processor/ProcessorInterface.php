@@ -2,11 +2,10 @@
 
 namespace App\Import\Processor;
 
-use App\Import\Configuration\ConfigurationInterface;
-use App\Import\Result\ResultInterface;
-
 /**
  * Import processor.
+ *
+ * @template T
  */
 interface ProcessorInterface
 {
@@ -14,26 +13,27 @@ interface ProcessorInterface
     /**
      * Check given input is supported by the processor.
      *
-     * @param mixed                       $input  Processor input.
-     * @param ConfigurationInterface|null $config Processing configuration.
+     * @param mixed $input   Processor input.
+     * @param array $options Processor options.
      *
      * @return bool
      */
     public function isSupported(
         mixed $input,
-        ?ConfigurationInterface $config = null
+        array $options = [],
     ): bool;
 
     /**
      * Process given input.
      *
-     * @param mixed                       $input  Processor input.
-     * @param ConfigurationInterface|null $config Processing configuration.
+     * @param mixed $input   Processor input.
+     * @param array $options Processor options.
      *
-     * @return ResultInterface
+     * @return T
      */
     public function process(
         mixed $input,
-        ?ConfigurationInterface $config = null
-    ): ResultInterface;
+        array $options = [],
+    ): mixed;
+
 }

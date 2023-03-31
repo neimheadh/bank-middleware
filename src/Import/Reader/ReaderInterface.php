@@ -3,10 +3,11 @@
 namespace App\Import\Reader;
 
 use App\Import\Configuration\ConfigurationInterface;
-use App\Import\Result\ResultInterface;
 
 /**
  * Import reader.
+ *
+ * @template T
  */
 interface ReaderInterface
 {
@@ -14,27 +15,24 @@ interface ReaderInterface
     /**
      * Check given input is supported by the reader.
      *
-     * @param mixed                       $input  Reader input.
-     * @param ConfigurationInterface|null $config Reading configuration.
+     * @param mixed $input   Reader input.
+     * @param array $options Reading options.
      *
      * @return bool
      */
-    public function isSupported(
-        mixed $input,
-        ?ConfigurationInterface $config = null
-    ): bool;
+    public function isSupported(mixed $input, array $options = []): bool;
 
     /**
      * Read given input.
      *
-     * @param mixed                       $input  Reader input.
-     * @param ConfigurationInterface|null $config Reading configuration.
+     * @param mixed $input   Reader input.
+     * @param array $options Reading options.
      *
-     * @return ResultInterface
+     * @return T
      */
     public function read(
         mixed $input,
-        ?ConfigurationInterface $config
-    ): ResultInterface;
+        array $options = [],
+    ): mixed;
 
 }

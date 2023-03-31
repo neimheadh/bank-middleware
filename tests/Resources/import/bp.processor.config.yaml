@@ -1,0 +1,41 @@
+'data-map':
+  account:
+    class: App\Entity\Account\Account
+    identifier: code
+    map:
+      currency:
+        parser:
+          class: App\Import\Processor\Parser\EntityReferenceParser
+          arguments: ['@doctrine.orm.entity_manager', App\Entity\Currency\Currency, 'code']
+        fixed: 'EUR'
+      code:
+        fixed: '000001'
+      name:
+        fixed: 'Test account'
+
+  transaction:
+    class: App\Entity\Account\Transaction
+    map:
+      account:
+        reference: 'account.000001'
+      currency:
+        parser:
+          class: App\Import\Processor\Parser\EntityReferenceParser
+          arguments: ['@doctrine.orm.entity_manager', App\Entity\Currency\Currency, 'code']
+        fixed: 'EUR'
+      createdAt:
+        parser:
+          class: App\Import\Processor\Parser\DateParser
+          arguments: ['d/m/Y']
+        value: Date operation
+      name:
+        value: Libelle operation
+      balance:
+        parser:
+          class: App\Import\Processor\Parser\SumValueParser
+          arguments:
+            - class: App\Import\Processor\Parser\FloatParser
+              arguments: {noError: true, ceil: 2}
+            - class: App\Import\Processor\Parser\FloatParser
+              arguments: {noError: true, floor: 2}
+        value: ['Debit', 'Credit']

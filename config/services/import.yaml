@@ -5,16 +5,18 @@ services:
 
   App\Import\:
     resource: '../../src/Import/*'
-    exclude:  '../../src/Import/{Parser,Exception}'
+    exclude:  '../../src/Import/{Exception}'
 
   App\Import\Processor\:
     resource: '../../src/Import/Processor/*'
-    public: true
+    public:   true
+    exclude:  '../../src/Import/Processor/{Parser,Result}'
 
   App\Import\Reader\:
     resource: '../../src/Import/Reader/*'
-    public: true
+    public:   true
+    exclude: '../../src/Import/Reader/{Result}'
 
   App\Import\Writer\:
     resource: '../../src/Import/Writer/*'
-    public: true
+    public:   true

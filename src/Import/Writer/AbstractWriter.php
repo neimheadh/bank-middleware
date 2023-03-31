@@ -2,44 +2,54 @@
 
 namespace App\Import\Writer;
 
-use App\Import\Configuration\ConfigurationInterface;
-use App\Import\Exception\InputNotSupportedException;
-use App\Import\Result\ResultInterface;
+use Throwable;
 
 /**
  * Import writer.
+ *
+ * @template T
+ * @implements WriterInterface<T>
  */
 abstract class AbstractWriter implements WriterInterface
 {
 
     /**
      * {@inheritDoc}
+     *
+     * @return T
+     * @throws Throwable
      */
-    public function write(
-        mixed $input,
-        ?ConfigurationInterface $config = null
-    ): ResultInterface {
-        if (!$this->isSupported($input, $config)) {
-            throw new InputNotSupportedException(
-                $this::class,
-                $input
+    public function write(mixed $input, array $options = []): mixed
+    {
+        if (!$this->isSupported($input, $options)) {
+            throw $this->getUnsupportedException(
+                $input,
+                $options
             );
         }
 
-        return $this->execute($input, $config);
+        return $this->execute($input, $options);
     }
 
     /**
      * Write given input.
      *
-     * @param mixed                       $input  Writer input.
-     * @param ConfigurationInterface|null $config Writer configuration.
-     *
-     * @return ResultInterface
+     * @param mixed $input   Writer input.
+     * @param array $options Writer options.
      */
-    abstract public function execute(
+    abstract protected function execute(mixed $input, array $options): mixed;
+
+    /**
+     * Get the input not supported exception.
+     *
+     * @param mixed $input   Given input.
+     * @param array $options Writer options.
+     *
+     * @return Throwable
+     */
+    abstract protected function getUnsupportedException(
         mixed $input,
-        ?ConfigurationInterface $config
-    ): ResultInterface;
+        array $options
+    ): Throwable;
 
 }

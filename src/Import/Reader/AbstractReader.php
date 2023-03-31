@@ -2,44 +2,57 @@
 
 namespace App\Import\Reader;
 
-use App\Import\Configuration\ConfigurationInterface;
 use App\Import\Exception\InputNotSupportedException;
-use App\Import\Result\ResultInterface;
+use Throwable;
 
 /**
  * Import reader.
+ *
+ * @template T
+ *
+ * @implements ReaderInterface<T>
  */
 abstract class AbstractReader implements ReaderInterface
 {
 
     /**
      * {@inheritDoc}
+     *
+     * @return T
+     * @throws Throwable
      */
     public function read(
         mixed $input,
-        ?ConfigurationInterface $config = null
-    ): ResultInterface {
-        if (!$this->isSupported($input)) {
-            throw new InputNotSupportedException(
-                $this::class,
-                $input
-            );
+        array $options = [],
+    ): mixed {
+        if (!$this->isSupported($input, $options)) {
+            throw $this->getUnsupportedException($input, $options);
         }
 
-        return $this->execute($input, $config);
+        return $this->execute($input, $options);
     }
 
     /**
      * Read given input.
      *
-     * @param mixed                       $input  Reader input.
-     * @param ConfigurationInterface|null $config Reading configuration.
+     * @param mixed $input   Reader input.
+     * @param array $options Reading options.
      *
-     * @return ResultInterface
+     * @return T
      */
-    abstract protected function execute(
+    abstract protected function execute(mixed $input, array $options): mixed;
+
+    /**
+     * Get the file not supported exception.
+     *
+     * @param mixed $input   Given input.
+     * @param array $options Reading options.
+     *
+     * @return Throwable
+     */
+    abstract protected function getUnsupportedException(
         mixed $input,
-        ?ConfigurationInterface $config
-    ): ResultInterface;
+        array $options
+    ): Throwable;
 
 }

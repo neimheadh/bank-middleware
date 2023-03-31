@@ -23,6 +23,12 @@ RUN curl -o composer-setup.php https://getcomposer.org/installer \
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_pgsql zip intl pdo_sqlite
 
+# Install xdebug with coverage
+ARG XDEBUG_VERSION=""
+RUN pecl install xdebug \
+ && docker-php-ext-enable xdebug \
+ && echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 # Configure environment
 ARG USER_ID=1000
 ARG GROUP_ID=1000

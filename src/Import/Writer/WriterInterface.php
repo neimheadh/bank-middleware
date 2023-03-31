@@ -3,10 +3,11 @@
 namespace App\Import\Writer;
 
 use App\Import\Configuration\ConfigurationInterface;
-use App\Import\Result\ResultInterface;
 
 /**
  * Import writer.
+ *
+ * @template T
  */
 interface WriterInterface
 {
@@ -14,27 +15,21 @@ interface WriterInterface
     /**
      * Check given input is supported by the writer.
      *
-     * @param mixed                       $input  Writer input.
-     * @param ConfigurationInterface|null $config Writing configuration.
+     * @param mixed $input   Writer input.
+     * @param array $options Writer options.
      *
      * @return bool
      */
-    public function isSupported(
-        mixed $input,
-        ?ConfigurationInterface $config = null
-    ): bool;
+    public function isSupported(mixed $input, array $options = []): bool;
 
     /**
      * Write given input.
      *
-     * @param mixed                       $input  Writer input.
-     * @param ConfigurationInterface|null $config Writer configuration.
+     * @param mixed $input   Writer input.
+     * @param array $options Writer options.
      *
-     * @return ResultInterface
+     * @return T
      */
-    public function write(
-        mixed $input,
-        ?ConfigurationInterface $config
-    ): ResultInterface;
+    public function write(mixed $input, array $options = []): mixed;
 
 }

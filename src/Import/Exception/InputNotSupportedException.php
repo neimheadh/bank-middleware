@@ -14,6 +14,7 @@ class InputNotSupportedException extends InvalidArgumentException
     /**
      * @param string         $batchClass Class of the batch treating the input.
      * @param mixed          $input      Given input.
+     * @param mixed          $key        Error position key.
      * @param int            $code       Error code.
      * @param Throwable|null $previous   Previous exception.
      */
@@ -24,7 +25,26 @@ class InputNotSupportedException extends InvalidArgumentException
         int $code = 0,
         ?Throwable $previous = null
     ) {
-        $message = $key === null
+        $message = $this->buildMessage($batchClass, $input, $key);
+        parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * Build error message.
+     *
+     * @param string $batchClass Class of the batch treating the input.
+     * @param mixed  $input      Given input.
+     * @param mixed  $options    Given options.
+     * @param mixed  $key        Error position key.
+     *
+     * @return string
+     */
+    protected function buildMessage(
+        string $batchClass,
+        mixed $input,
+        mixed $key = null,
+    ): string {
+        return $key === null
             ? sprintf(
                 'Given input of type "%s" not supported by "%s".',
                 gettype($input),
@@ -37,8 +57,6 @@ class InputNotSupportedException extends InvalidArgumentException
                 $batchClass,
                 $key
             );
-
-        parent::__construct($message, $code, $previous);
     }
 
 }

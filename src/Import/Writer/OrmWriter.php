@@ -2,73 +2,100 @@
 
 namespace App\Import\Writer;
 
-use App\Import\Configuration\ConfigurationInterface;
-use App\Import\Result\ResultCollection;
-use App\Import\Result\ResultInterface;
-use Countable;
-use Doctrine\Persistence\ObjectManager;
-use Iterator;
+use App\Import\Exception\InputNotSupportedException;
+use Doctrine\ORM\EntityManagerInterface;
+use Throwable;
 
 /**
  * Import ORM writer.
+ *
+ * @extends AbstractWriter<object[]>
  */
 class OrmWriter extends AbstractWriter
 {
 
     /**
-     * @param ObjectManager $manager Doctrine object manager.
+     * Bulk persist option.
+     */
+    public const OPTION_BULK_PERSIST = 'bulk-persist';
+
+    /**
+     * @param EntityManagerInterface $manager Doctrine object manager.
      */
     public function __construct(
-        private ObjectManager $manager
+        private readonly EntityManagerInterface $manager
     ) {
     }
 
     /**
      * {@inheritDoc}
      */
-    public function isSupported(
-        mixed $input,
-        ?ConfigurationInterface $config = null
-    ): bool {
-        return $input instanceof Iterator
-            && $input instanceof Countable;
+    public function isSupported(mixed $input, array $options = []): bool
+    {
+        return is_array($input)
+            || is_object($input);
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @param Countable|Iterator $input Writer input.
      */
-    public function execute(
-        mixed $input,
-        ?ConfigurationInterface $config
-    ): ResultInterface {
-        return new ResultCollection(
-            current: fn() => $this->writeEntry($input->current()),
-            count: fn() => $input->count(),
-            next: fn() => $input->next(),
-            key: fn() => $input->key(),
-            valid: fn() => $input->valid(),
-            rewind: fn() => $input->rewind(),
-        );
+    protected function execute(mixed $input, array $options): array
+    {
+        $bulkPersist = $options[self::OPTION_BULK_PERSIST] ?? false;
+        $entities = [];
+
+        if (is_iterable($input)) {
+            foreach ($input as $item) {
+                $this->writeEntity($item, $bulkPersist, $entities);
+            }
+        } else {
+            $this->writeEntity($input, $bulkPersist, $entities);
+        }
+
+        if ($bulkPersist) {
+            $this->manager->flush();
+        }
+
+        return $entities;
     }
 
     /**
-     * Write a result entry.
-     *
-     * @param array|object $entry The result entry.
-     *
-     * @return array|object
+     * {@inheritDoc}
      */
-    private function writeEntry(array|object $entry): array|object
-    {
-        if (is_object($entry)) {
-            $this->manager->persist($entry);
-            $this->manager->flush();
+    protected function getUnsupportedException(
+        mixed $input,
+        array $options
+    ): Throwable {
+        return new InputNotSupportedException($this::class, $input);
+    }
 
-            return $entry;
+    /**
+     * Write entities.
+     *
+     * @param array|object $entity      Entity or entity list.
+     * @param bool         $bulkPersist True if bulk persist.
+     * @param object[]     $entities    Entity stack.
+     *
+     * @return void
+     */
+    private function writeEntity(
+        array|object $entity,
+        bool $bulkPersist,
+        array &$entities,
+    ): void {
+        if (is_array($entity)) {
+            foreach ($entity as $entry) {
+                $this->writeEntity($entry, $bulkPersist, $entities);
+            }
+            return;
         }
 
-        return array_map(fn ($entry) => $this->writeEntry($entry), $entry);
+        $this->manager->persist($entity);
+        !$bulkPersist && $this->manager->flush();
+
+        if (!in_array($entity, $entities)) {
+            $entities[] = $entity;
+        }
     }
+
 }
