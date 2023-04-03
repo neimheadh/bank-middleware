@@ -20,7 +20,53 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
  */
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
 #[ORM\Table(name: 'app_import_profile')]
-#[Sonata\Admin(labelTranslatorStrategy: AdminTranslatorStrategy::class)]
+#[Sonata\Admin(
+    labelTranslatorStrategy: AdminTranslatorStrategy::class,
+    formFields: [
+        'code' => new Sonata\FormField(position: 1),
+        'name' => new Sonata\FormField(position: 2),
+        'reader' => new Sonata\FormField(
+            type: ClassChoiceType::class,
+            position: 3,
+            options: [
+                ClassChoiceType::OPTION_NAMESPACE => 'App\Import\Reader',
+                ClassChoiceType::OPTION_DEPTH => 0,
+            ],
+        ),
+        'readerConfiguration' => new Sonata\FormField(
+            type: ArrayType::class,
+            position: 4
+        ),
+        'processor' => new Sonata\FormField(
+            type: ClassChoiceType::class,
+            position: 5,
+            options: [
+                ClassChoiceType::OPTION_NAMESPACE => 'App\Import\Processor',
+                ClassChoiceType::OPTION_DEPTH => 0,
+            ],
+        ),
+        'processorConfiguration' => new Sonata\FormField(
+            type: ArrayType::class,
+            position: 6
+        ),
+        'writer' => new Sonata\FormField(
+            type: ClassChoiceType::class,
+            position: 7,
+            options: [
+                ClassChoiceType::OPTION_NAMESPACE => 'App\Import\Writer',
+                ClassChoiceType::OPTION_DEPTH => 0,
+            ],
+        ),
+        'writerConfiguration' => new Sonata\FormField(
+            type: ArrayType::class,
+            position: 8
+        ),
+    ],
+    listFields: [
+        'code' => new Sonata\ListField(position: 1),
+        'name' => new Sonata\ListField(position: 2),
+    ]
+)]
 class Profile implements EntityInterface,
                          NamedEntityInterface,
                          CodeEntityInterface
@@ -31,38 +77,10 @@ class Profile implements EntityInterface,
     use CodeEntityTrait;
 
     /**
-     * Profile code.
-     *
-     * @var string|null
-     */
-    #[ORM\Column(type: 'string', length: 128, unique: true)]
-    #[Sonata\FormField(position: 1)]
-    #[Sonata\ListField(position: 1)]
-    private ?string $code = null;
-
-    /**
-     * Profile name.
-     *
-     * @var string|null
-     */
-    #[ORM\Column(type: 'string', length: 256)]
-    #[Sonata\FormField(position: 2)]
-    #[Sonata\ListField(position: 2)]
-    private ?string $name = null;
-
-    /**
      * Processor class.
      *
      * @var string|null
      */
-    #[Sonata\FormField(
-        type: ClassChoiceType::class,
-        position: 5,
-        options: [
-            ClassChoiceType::OPTION_NAMESPACE => 'App\Import\Processor',
-            ClassChoiceType::OPTION_DEPTH => 0,
-        ],
-    )]
     #[ORM\Column(type: 'string', length: 128)]
     private ?string $processor = null;
 
@@ -71,7 +89,6 @@ class Profile implements EntityInterface,
      *
      * @var array
      */
-    #[Sonata\FormField(type: ArrayType::class, position: 6)]
     #[ORM\Column(type: 'json', options: ['default' => '[]'])]
     private array $processorConfiguration = [];
 
@@ -80,14 +97,6 @@ class Profile implements EntityInterface,
      *
      * @var string|null
      */
-    #[Sonata\FormField(
-        type: ClassChoiceType::class,
-        position: 3,
-        options: [
-            ClassChoiceType::OPTION_NAMESPACE => 'App\Import\Reader',
-            ClassChoiceType::OPTION_DEPTH => 0,
-        ],
-    )]
     #[ORM\Column(type: 'string', length: 128)]
     private ?string $reader = null;
 
@@ -96,7 +105,6 @@ class Profile implements EntityInterface,
      *
      * @var array
      */
-    #[Sonata\FormField(type: ArrayType::class, position: 4)]
     #[ORM\Column(type: 'json', options: ['default' => '[]'])]
     private array $readerConfiguration = [];
 
@@ -105,14 +113,6 @@ class Profile implements EntityInterface,
      *
      * @var string|null
      */
-    #[Sonata\FormField(
-        type: ClassChoiceType::class,
-        position: 7,
-        options: [
-            ClassChoiceType::OPTION_NAMESPACE => 'App\Import\Writer',
-            ClassChoiceType::OPTION_DEPTH => 0,
-        ],
-    )]
     #[ORM\Column(type: 'string', length: 128)]
     private ?string $writer = null;
 
@@ -121,7 +121,6 @@ class Profile implements EntityInterface,
      *
      * @var array
      */
-    #[Sonata\FormField(type: ArrayType::class, position: 8)]
     #[ORM\Column(type: 'json', options: ['default' => '[]'])]
     private array $writerConfiguration = [];
 

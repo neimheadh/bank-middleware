@@ -16,11 +16,25 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
  * Currency.
- *
- * @Sonata\Admin()
  */
 #[ORM\Entity(repositoryClass: CurrencyRepository::class)]
 #[ORM\Table(name: 'app_currency_currency')]
+#[Sonata\Admin(
+    formFields: [
+        'code' => new Sonata\FormField(),
+        'name' => new Sonata\FormField(),
+        'pluralName' => new Sonata\FormField(),
+        'default' => new Sonata\FormField(),
+        'symbol' => new Sonata\FormField(),
+        'nativeSymbol' => new Sonata\FormField(),
+        'rounded' => new Sonata\FormField(),
+        'usdExchangeRate' => new Sonata\FormField(),
+    ],
+    listFields: [
+        'code' => new Sonata\ListField(),
+        'name' => new Sonata\ListField(),
+    ]
+)]
 class Currency implements DatedEntityInterface,
                           CodeEntityInterface,
                           DefaultEntityInterface,
@@ -114,6 +128,14 @@ class Currency implements DatedEntityInterface,
         nullable: true
     )]
     private ?float $usdExchangeRate = null;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __toString(): string
+    {
+        return "$this->symbol";
+    }
 
     /**
      * Convert value from the given currency to the current currency.

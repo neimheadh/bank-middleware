@@ -12,11 +12,17 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
  * Account bank.
- *
- * @Sonata\Admin()
  */
 #[ORM\Entity(repositoryClass: BankRepository::class)]
 #[ORM\Table(name: 'app_account_bank')]
+#[Sonata\Admin(
+    formFields: [
+        'name' => new Sonata\FormField(),
+    ],
+    listFields: [
+        'name' => new Sonata\ListField(),
+    ]
+)]
 class Bank implements EntityInterface,
                       NamedEntityInterface
 {

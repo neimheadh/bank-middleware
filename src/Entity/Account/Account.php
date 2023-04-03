@@ -16,9 +16,20 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
  * Bank account.
- *
- * @Sonata\Admin()
  */
+#[Sonata\Admin(
+    formFields: [
+        'code' => new Sonata\FormField(),
+        'name' => new Sonata\FormField(),
+        'balance' => new Sonata\FormField(),
+        'currency' => new Sonata\FormField(),
+    ],
+    listFields: [
+        'code' => new Sonata\ListField(),
+        'name' => new Sonata\ListField(),
+        'balance' => new Sonata\ListField(type: 'balance'),
+    ]
+)]
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
 #[ORM\Table(name: 'app_account_account')]
 class Account implements EntityInterface,
@@ -31,24 +42,6 @@ class Account implements EntityInterface,
     use NamedEntityTrait;
     use BalancedEntityTrait;
     use CodeEntityTrait;
-
-    /**
-     * Account code.
-     *
-     * @var string|null
-     */
-    #[Sonata\FormField(position: 2)]
-    #[ORM\Column(type: 'string', length: 256, nullable: true)]
-    private ?string $code = null;
-
-    /**
-     * Entity name.
-     *
-     * @var string|null
-     */
-    #[Sonata\FormField(position: 1)]
-    #[ORM\Column(type: 'string', length: 256, options: ['default' => ''])]
-    private ?string $name = null;
 
     public function __construct()
     {
