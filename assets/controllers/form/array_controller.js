@@ -94,12 +94,22 @@ export default class extends Controller {
     const placeholders = this.placeholderValue;
     let level = $row.find('.app-form-type-array__row__key').data('level') ?? 0;
 
-    $row.after(this.newRow
-      .replaceAll('{{level}}', level)
-      .replaceAll('{{placeholders.key}}', placeholders.key)
-      .replaceAll('{{placeholders.value}}', placeholders.value)
-    );
-    $row.next().fadeIn(300);
+    console.log();
+    if ($row.parent().prop('tagName') === 'THEAD') {
+      const $body = $(table).find('tbody');
+      $body.prepend(this.newRow
+        .replaceAll('{{level}}', level)
+        .replaceAll('{{placeholders.key}}', placeholders.key)
+        .replaceAll('{{placeholders.value}}', placeholders.value));
+      $body.find('tr').first().fadeIn(300);
+    } else {
+      $row.after(this.newRow
+        .replaceAll('{{level}}', level)
+        .replaceAll('{{placeholders.key}}', placeholders.key)
+        .replaceAll('{{placeholders.value}}', placeholders.value)
+      );
+      $row.next().fadeIn(300);
+    }
 
     // Input names recalculation.
     this._refresh(table);
