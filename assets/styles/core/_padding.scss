@@ -1,0 +1,38 @@
+$spacer: 1rem;
+$_sizes: 0, 1, 2, 3, 4, 5;
+$_multiplies: 0, .25, .5, 1, 1.5, 3;
+
+@each $_size in $_sizes {
+  $_multiply: nth($_multiplies, $_size + 1);
+  $_val: $_size * $_multiply * $spacer;
+
+  .pt-#{$_size} {
+    padding-top: $_val !important;
+  }
+
+  .pb-#{$_size} {
+    padding-bottom: $_val !important;
+  }
+
+  .pl-#{$_size} {
+    padding-left: $_val !important;
+  }
+
+  .pr-#{$_size} {
+    padding-right: $_val !important;
+  }
+
+  .px-#{$_size} {
+    padding-left: $_val !important;
+    padding-right: $_val !important;
+  }
+
+  .py-#{$_size} {
+    padding-top: #{$_val} !important;
+    padding-bottom: #{$_val} !important;
+  }
+
+  .p-#{$_size} {
+    padding: #{$_val} !important;
+  }
+}

@@ -2,8 +2,6 @@
 
 namespace App\Entity\Import;
 
-use App\Form\Type\ArrayType;
-use App\Form\Type\ClassChoiceType;
 use App\Model\Entity\Generic\CodeEntityInterface;
 use App\Model\Entity\Generic\CodeEntityTrait;
 use App\Model\Entity\Generic\EntityInterface;
@@ -11,7 +9,8 @@ use App\Model\Entity\Generic\EntityTrait;
 use App\Model\Entity\Generic\NamedEntityInterface;
 use App\Model\Entity\Generic\NamedEntityTrait;
 use App\Repository\Import\ProfileRepository;
-use App\Translation\Translator\AdminTranslatorStrategy;
+use App\Type\Form\ArrayType;
+use App\Type\Form\ClassChoiceType;
 use Doctrine\ORM\Mapping as ORM;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
@@ -21,7 +20,8 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
 #[ORM\Table(name: 'app_import_profile')]
 #[Sonata\Admin(
-    labelTranslatorStrategy: AdminTranslatorStrategy::class,
+    label: 'Import',
+    group: 'Settings',
     formFields: [
         'code' => new Sonata\FormField(position: 1),
         'name' => new Sonata\FormField(position: 2),
@@ -87,10 +87,10 @@ class Profile implements EntityInterface,
     /**
      * Processor configuration.
      *
-     * @var array
+     * @var array|null
      */
-    #[ORM\Column(type: 'json', options: ['default' => '[]'])]
-    private array $processorConfiguration = [];
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $processorConfiguration = null;
 
     /**
      * Reader class.
@@ -105,8 +105,8 @@ class Profile implements EntityInterface,
      *
      * @var array
      */
-    #[ORM\Column(type: 'json', options: ['default' => '[]'])]
-    private array $readerConfiguration = [];
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $readerConfiguration = null;
 
     /**
      * Writer class.
@@ -119,10 +119,10 @@ class Profile implements EntityInterface,
     /**
      * Processor configuration.
      *
-     * @var array
+     * @var array|null
      */
-    #[ORM\Column(type: 'json', options: ['default' => '[]'])]
-    private array $writerConfiguration = [];
+    #[ORM\Column(type: 'json', nullable: true)]
+    private ?array $writerConfiguration = null;
 
     /**
      * Get processor class.
@@ -137,9 +137,9 @@ class Profile implements EntityInterface,
     /**
      * Get processor configuration.
      *
-     * @return array
+     * @return array|null
      */
-    public function getProcessorConfiguration(): array
+    public function getProcessorConfiguration(): ?array
     {
         return $this->processorConfiguration;
     }
@@ -157,9 +157,9 @@ class Profile implements EntityInterface,
     /**
      * Reader configuration.
      *
-     * @return array
+     * @return array|null
      */
-    public function getReaderConfiguration(): array
+    public function getReaderConfiguration(): ?array
     {
         return $this->readerConfiguration;
     }
@@ -177,9 +177,9 @@ class Profile implements EntityInterface,
     /**
      * Get writer configuration.
      *
-     * @return array
+     * @return array|null
      */
-    public function getWriterConfiguration(): array
+    public function getWriterConfiguration(): ?array
     {
         return $this->writerConfiguration;
     }
@@ -201,12 +201,12 @@ class Profile implements EntityInterface,
     /**
      * Set processor configuration.
      *
-     * @param array $processorConfiguration Processor configuration.
+     * @param array|null $processorConfiguration Processor configuration.
      *
      * @return $this
      */
     public function setProcessorConfiguration(
-        array $processorConfiguration
+        ?array $processorConfiguration
     ): self {
         $this->processorConfiguration = $processorConfiguration;
 
@@ -230,11 +230,11 @@ class Profile implements EntityInterface,
     /**
      * Set reader configuration.
      *
-     * @param array $readerConfiguration Reader configuration.
+     * @param array|null $readerConfiguration Reader configuration.
      *
      * @return $this
      */
-    public function setReaderConfiguration(array $readerConfiguration): self
+    public function setReaderConfiguration(?array $readerConfiguration): self
     {
         $this->readerConfiguration = $readerConfiguration;
 
@@ -258,11 +258,11 @@ class Profile implements EntityInterface,
     /**
      * Set writer configuration.
      *
-     * @param array $writerConfiguration Writer configuration.
+     * @param array|null $writerConfiguration Writer configuration.
      *
      * @return $this
      */
-    public function setWriterConfiguration(array $writerConfiguration): self
+    public function setWriterConfiguration(?array $writerConfiguration): self
     {
         $this->writerConfiguration = $writerConfiguration;
 

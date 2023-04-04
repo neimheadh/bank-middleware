@@ -1,0 +1,39 @@
+$_spacing: 2rem;
+
+.app-form-type-array {
+  &__row {
+    &__key {
+      @for $i from 1 through 12 {
+        &.level-#{$i} {
+          padding-left: $_spacing * $i !important;
+        }
+      }
+
+      input {
+        color: $dark-primary;
+      }
+
+      width: 20%;
+    }
+
+    &__actions {
+      text-align: right;
+      width: 15rem;
+      padding: 0 !important;
+    }
+  }
+
+  .btn {
+    padding: $spacer;
+  }
+
+  input {
+    border: 0 none;
+    margin: 0;
+    padding: 0 $spacer;
+  }
+
+  td {
+    padding: 0 !important;
+  }
+}

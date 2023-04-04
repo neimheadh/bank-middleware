@@ -1,0 +1,23 @@
+.btn {
+  &.reverse {
+    background: transparent;
+    border: 0 none;
+    transition: background-color $transition;
+
+    &:hover {
+      background-color: $light-gray;
+    }
+  }
+
+  &-danger {
+    &.reverse {
+      color: $red;
+    }
+  }
+
+  &-primary {
+    &.reverse {
+      color: $primary;
+    }
+  }
+}

@@ -11,6 +11,7 @@ use App\Model\Entity\Generic\EntityTrait;
 use App\Model\Entity\Generic\NamedEntityInterface;
 use App\Model\Entity\Generic\NamedEntityTrait;
 use App\Repository\Account\TransactionRepository;
+use App\Type\FieldDescriptionInterface;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -40,7 +41,7 @@ use Sonata\Form\Type\DatePickerType;
         'writeDate' => new Sonata\ListField(),
         'name' => new Sonata\ListField(),
         'balance' => new Sonata\ListField(
-            type: 'balance',
+            type: FieldDescriptionInterface::TYPE_BALANCE,
             fieldDescriptionOptions: [
                 'currency_field' => 'currency',
             ]

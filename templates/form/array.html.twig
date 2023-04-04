@@ -2,41 +2,93 @@
     App\Form\Type\Mode\ArrayType template.
 #}
 
-{% block app_array_row %}
-    <div>
-        {{ form_row(form) }}
-    </div>
-{% endblock app_array_row %}
+{% block app_form_type_array_widget %}
+    {% set level = 0 %}
 
-{% block app_array_widget %}
-    <table class="table table-responsive table-striped box-primary">
-        <thead class="bg-primary">
-            <tr>
-                <th>{{ name_label | trans({}, form.vars.translation_domain) }}</th>
-                <th>{{ type_label | trans({}, form.vars.translation_domain) }}</th>
-                <th>{{ value_label | trans({}, form.vars.translation_domain) }}</th>
-                <th class="cell-minimal"></th>
+    <table
+        class="app-form-type-array table table-bordered"
+        {{ stimulus_controller('form--array', {
+            name: form.vars.full_name,
+            placeholder: {
+                key:   'array.placeholder.key' | trans({}, 'form'),
+                value: 'array.placeholder.value' | trans({}, 'form'),
+            }
+        }) }}
+    >
+        <thead>
+            <tr class="app-form-type-array__row level-0">
+                <th class="app-form-type-array__row__key">{{ 'array.label.key' | trans({}, 'form') }}</th>
+                <th class="app-form-type-array__row__value">{{ 'array.label.value' | trans({}, 'form') }}</th>
+                <th class="app-form-type-array__row__actions">
+                    <a
+                        class="btn btn-primary fas fa-plus reverse"
+                        {{ stimulus_action('form--array', 'add') }}
+                    ></a>
+                </th>
             </tr>
         </thead>
         <tbody>
-            {% for name, child in form.children %}
-                {% if name matches '/^\\d+$/' %}
-                    <tr>
-                        <td>{{ form_widget(child.name) }}</td>
-                        <td>{{ form_widget(child.type) }}</td>
-                        <td>{{ form_widget(child.value) }}</td>
-                        <td class="cell-minimal">{{ form_widget(child.remove, {attr:{class: 'btn btn-danger'}}) }}</td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
+            {{ block('_app_form_type_array_widget_row') }}
         </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="4" class="align-right">
-                    {{ form_widget(form.add, {attr:{class: 'btn btn-primary'}}) }}
-                </td>
-            </tr>
-        </tfoot>
     </table>
-    {{ form_end(form) }}
-{% endblock app_array_widget %}
+{% endblock app_form_type_array_widget %}
+
+{% block _app_form_type_array_widget_row %}
+    {% for child in form.children %}
+        {% if child.value.children | length %}
+            {{ block('_app_form_type_array_widget_row_multiple') }}
+        {% else %}
+            {{ block('_app_form_type_array_widget_row_simple') }}
+        {% endif %}
+    {% endfor %}
+{% endblock _app_form_type_array_widget_row %}
+
+{% block _app_form_type_array_widget_row_simple %}
+    <tr class="app-form-type-array__row">
+        <td class="app-form-type-array__row__key level-{{ level }}" data-level="{{ level }}">
+            {{ form_widget(child.key) }}
+        </td>
+        <td class="app-form-type-array__row__value">
+            {{ form_widget(child.value) }}
+        </td>
+        <td class="app-form-type-array__row__actions">
+            {{ block('_app_form_type_array_widget_row_actions') }}
+        </td>
+    </tr>
+{% endblock _app_form_type_array_widget_row_simple %}
+
+{% block _app_form_type_array_widget_row_multiple %}
+    <tr class="app-form-type-array__row">
+        <td colspan="2" class="app-form-type-array__row__key level-{{ level }}" data-level="{{ level }}">
+            {{ form_widget(child.key) }}
+        </td>
+        <td class="app-form-type-array__row__actions">
+            {{ block('_app_form_type_array_widget_row_actions') }}
+        </td>
+    </tr>
+
+    {% set level = level + 1 %}
+    {% set form = child.value %}
+    {{ block('_app_form_type_array_widget_row') }}
+    {% set level = level - 1 %}
+{% endblock _app_form_type_array_widget_row_multiple %}
+
+{% block _app_form_type_array_widget_row_actions %}
+    <a
+        class="btn btn-danger fas fa-minus reverse"
+        {{ stimulus_action('form--array', 'remove') }}
+    ></a>
+    <a
+        class="btn btn-primary fas fa-plus reverse"
+        {{ stimulus_action('form--array', 'add') }}
+    ></a>
+    <a
+        class="btn btn-primary fas fa-arrow-right reverse"
+        {{ stimulus_action('form--array', 'add_level') }}
+    ></a>
+    <a
+        class="btn {{ level ? 'btn-primary' : 'btn-default' }} fas fa-arrow-left reverse"
+        {{ level ? '' : 'disabled="disabled"' }}
+        {{ stimulus_action('form--array', 'remove_level') }}
+    ></a>
+{% endblock _app_form_type_array_widget_row_actions %}

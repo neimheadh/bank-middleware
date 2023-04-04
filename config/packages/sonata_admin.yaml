@@ -4,6 +4,13 @@ sonata_admin:
         blocks:
             - { type: sonata.admin.block.admin_list, position: left }
 
+        groups:
+            Account:
+                icon: 'fas fa-piggy-bank'
+            Settings:
+                icon: 'fas fa-cogs'
+
+
     templates:
         layout: 'base.html.twig'
 

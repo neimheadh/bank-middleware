@@ -20,6 +20,7 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 #[ORM\Entity(repositoryClass: CurrencyRepository::class)]
 #[ORM\Table(name: 'app_currency_currency')]
 #[Sonata\Admin(
+    group: 'Settings',
     formFields: [
         'code' => new Sonata\FormField(),
         'name' => new Sonata\FormField(),

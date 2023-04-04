@@ -1,0 +1,14 @@
+$spacer: 1rem;
+$transition: 300ms;
+
+$gray: #aaaaaa;
+$red: #d73925;
+$primary: #367fa9;
+
+$dark-gray:    darken($gray, 25%);
+$dark-red:     darken($red, 25%);
+$dark-primary: darken($primary, 10%);
+
+$light-gray:    lighten($gray, 25%);
+$light-red:     lighten($red, 25%);
+$light-primary: lighten($primary, 25%);

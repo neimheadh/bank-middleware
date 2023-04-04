@@ -4,8 +4,10 @@ namespace App\Tests\Import\Writer;
 
 use App\Entity\Account\Account;
 use App\Entity\Account\Transaction;
+use App\Entity\Currency\Currency;
 use App\Import\Exception\InputNotSupportedException;
 use App\Import\Writer\OrmWriter;
+use App\Repository\Currency\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Throwable;
@@ -31,6 +33,17 @@ class OrmWriterTest extends KernelTestCase
         $this->manager = static::getContainer()->get(
             'doctrine.orm.entity_manager'
         );
+
+        /** @var CurrencyRepository $currencyRepository */
+        $currencyRepository = $this->manager->getRepository(Currency::class);
+
+        if ($currencyRepository->findDefault() === null) {
+            $currency = new Currency();
+            $currency->setDefault(true);
+            $currency->setCode('EUR');
+            $this->manager->persist($currency);
+            $this->manager->flush();
+        }
     }
 
     /**
@@ -47,6 +60,7 @@ class OrmWriterTest extends KernelTestCase
         $name = uniqid();
 
         $account = new Account();
+        $account->setCode(uniqid());
         $account->setName($name);
 
         $writer = new OrmWriter($this->manager);
@@ -69,6 +83,7 @@ class OrmWriterTest extends KernelTestCase
     {
         $account = new Account();
         $account->setName('Test account 1');
+        $account->setCode(uniqid());
 
         $t1 = new Transaction();
         $t2 = new Transaction();

@@ -11,6 +11,7 @@ use App\Model\Entity\Generic\EntityTrait;
 use App\Model\Entity\Generic\NamedEntityInterface;
 use App\Model\Entity\Generic\NamedEntityTrait;
 use App\Repository\Account\AccountRepository;
+use App\Type\FieldDescriptionInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
@@ -27,7 +28,9 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
     listFields: [
         'code' => new Sonata\ListField(),
         'name' => new Sonata\ListField(),
-        'balance' => new Sonata\ListField(type: 'balance'),
+        'balance' => new Sonata\ListField(
+            type: FieldDescriptionInterface::TYPE_BALANCE
+        ),
     ]
 )]
 #[ORM\Entity(repositoryClass: AccountRepository::class)]

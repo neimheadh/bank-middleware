@@ -1,21 +1,9 @@
 array:
   label:
-    add: Ajouter une ligne
-    add_level: Ajouter un niveau
-    name: Entrée
-    remove: Supprimer
-    type: Type
+    actions: ''
+    key: Clé
     value: Valeur
 
   placeholder:
-    name: Entrée
-    object_type: Array
-    type: Type
+    key: Clé
     value: Valeur
-
-  type:
-    array: Tableau
-    boolean: Booléen
-    float: Float
-    integer: Integer
-    string: String

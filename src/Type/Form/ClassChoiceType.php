@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Type;
+namespace App\Type\Form;
 
-use App\Form\Loader\ClassListChoiceLoader;
+use App\Type\Form\Loader\ClassListChoiceLoader;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

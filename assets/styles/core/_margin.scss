@@ -1,0 +1,67 @@
+$_sizes: 0, 1, 2, 3, 4, 5;
+$_multiplies: 0, .25, .5, 1, 1.5, 3;
+
+@each $_size in $_sizes {
+  $_multiply: nth($_multiplies, $_size + 1);
+  $_val: $_size * $_multiply * $spacer;
+
+  .mt-#{$_size} {
+    margin-top: $_val !important;
+  }
+
+  .mb-#{$_size} {
+    margin-bottom: $_val !important;
+  }
+
+  .ml-#{$_size} {
+    margin-left: $_val !important;
+  }
+
+  .mr-#{$_size} {
+    margin-right: $_val !important;
+  }
+
+  .mx-#{$_size} {
+    margin-left: $_val !important;
+    margin-right: $_val !important;
+  }
+
+  .my-#{$_size} {
+    margin-top: #{$_val} !important;
+    margin-bottom: #{$_val} !important;
+  }
+
+  .m-#{$_size} {
+    padding: #{$_val} !important;
+  }
+}
+
+.mt-auto {
+  margin-top: auto !important;
+}
+
+.mb-auto {
+  margin-bottom: auto !important;
+}
+
+.ml-auto {
+  margin-left: auto !important;
+}
+
+.mr-auto {
+  margin-right: auto !important;
+}
+
+.mx-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.my-auto {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+
+.m-auto {
+  margin: auto !important;
+}

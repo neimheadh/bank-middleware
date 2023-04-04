@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Form\Loader;
+namespace App\Type\Form\Loader;
 
 use Composer\Autoload\ClassLoader;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
 use ReflectionException;
-use SplFileObject;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
