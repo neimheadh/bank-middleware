@@ -162,7 +162,6 @@ class DataMapProcessor extends AbstractProcessor
                         $argument['arguments'] ?? []
                     );
                     $class = $argument['class'];
-
                     return new $class(...$arguments);
                 }
 

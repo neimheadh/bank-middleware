@@ -9,7 +9,7 @@
           arguments: ['@doctrine.orm.entity_manager', App\Entity\Currency\Currency, 'code']
         fixed: 'EUR'
       code:
-        fixed: '000001'
+        fixed: '{{account.code}}'
       name:
         fixed: 'Test account'
 
@@ -17,7 +17,7 @@
     class: App\Entity\Account\Transaction
     map:
       account:
-        reference: 'account.000001'
+        reference: 'account.{{account.code}}'
       currency:
         parser:
           class: App\Import\Processor\Parser\EntityReferenceParser

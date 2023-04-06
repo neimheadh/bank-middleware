@@ -1,26 +1,40 @@
 <?php
 
-namespace App\Event\Listener\ORM\Generic;
+namespace App\Event\ORM\EventSubscriber;
 
-use App\Model\Event\Listener\ORM\DoctrinePrePersistEventListenerInterface;
-use App\Model\Event\Listener\ORM\DoctrinePreUpdateEventListenerInterface;
 use App\Model\Repository\Generic\DefaultEntityRepositoryInterface;
+use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Default entities join value auto setter.
  */
-class DefaultJoinSetEventListener implements
-    DoctrinePrePersistEventListenerInterface,
-    DoctrinePreUpdateEventListenerInterface
+class DefaultJoinSetEventSubscriber implements EventSubscriberInterface
 {
 
     /**
      * {@inheritDoc}
+     */
+    public function getSubscribedEvents(): array
+    {
+        return [
+            Events::prePersist,
+            Events::preUpdate
+        ];
+    }
+
+    /**
+     * Handle doctrine pre persist event.
+     *
+     * @param PrePersistEventArgs $args Event arguments.
+     *
+     * @return void
+     * @internal
      */
     public function prePersist(PrePersistEventArgs $args): void
     {
@@ -28,7 +42,12 @@ class DefaultJoinSetEventListener implements
     }
 
     /**
-     * {@inheritDoc}
+     * Handle doctrine pre update event.
+     *
+     * @param PreUpdateEventArgs $args Event arguments.
+     *
+     * @return void
+     * @internal
      */
     public function preUpdate(PreUpdateEventArgs $args): void
     {

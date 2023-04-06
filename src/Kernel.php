@@ -2,13 +2,13 @@
 
 namespace App;
 
-use App\DependencyInjection\Compiler\DoctrineEntityListenerCompilerPass;
-use App\DependencyInjection\Compiler\DoctrineEventListenerCompilerPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
+/**
+ * Application kernel.
+ */
 class Kernel extends BaseKernel
 {
 
@@ -36,22 +36,6 @@ class Kernel extends BaseKernel
                 $configDir . '/{services}/' . $this->environment . '/*.{php,yaml}'
             );
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-        $container->addCompilerPass(
-            new DoctrineEntityListenerCompilerPass(),
-            priority: 1
-        );
-        $container->addCompilerPass(
-            new DoctrineEventListenerCompilerPass(),
-            priority: 1
-        );
     }
 
 }

@@ -66,7 +66,8 @@ class ImportFileCommand extends Command
     /**
      * {@inheritDoc}
      */
-    protected function execute(
+    protected function
+    execute(
         InputInterface $input,
         OutputInterface $output
     ): int {
@@ -90,13 +91,16 @@ class ImportFileCommand extends Command
 
         $read = $reader->read($file, array_merge(
             ['progress' => $progress],
-            $profile->getReaderConfiguration(),
+            $profile->getReaderConfiguration() ?: [],
         ));
         $process = $processor->process(
             $read,
-            $profile->getProcessorConfiguration()
+            $profile->getProcessorConfiguration() ?: []
         );
-        $writer->write($process, $profile->getWriterConfiguration());
+        $writer->write(
+            $process,
+            $profile->getWriterConfiguration() ?: []
+        );
         $output->writeln("\n");
 
         return self::SUCCESS;

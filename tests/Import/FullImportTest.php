@@ -11,11 +11,11 @@ use App\Import\Monitoring\EventProgress;
 use App\Import\Processor\DataMapProcessor;
 use App\Import\Reader\CsvFileReader;
 use App\Import\Writer\OrmWriter;
+use App\Tests\DefaultCurrencyInitTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Iterator;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Throwable;
@@ -25,6 +25,9 @@ use Throwable;
  */
 class FullImportTest extends KernelTestCase
 {
+    use DefaultCurrencyInitTrait {
+        setUp as private initCurrency;
+    }
 
     /**
      * Reading advance count.
@@ -60,6 +63,8 @@ class FullImportTest extends KernelTestCase
      */
     protected function setUp(): void
     {
+        $this->initCurrency();
+
         $this->dispatcher = static::getContainer()->get('event_dispatcher');
 
         $this->start = 0;
@@ -91,8 +96,61 @@ class FullImportTest extends KernelTestCase
     public function testFullImport(): void
     {
         $lines = $this->read();
-        $entities = $this->process($lines);
+        $this->process($lines);
+
+        // Because of the iteration system, limiting memory usage, iteration
+        // rewinding makes new transaction object generation added by the
+        // chained setAccount() -> addTransaction() to the ORM loaded account.
+        // So we have to re-generate entities list before send it to the writer.
+        $lines = $this->getReadList();
+        $entities = $this->getProcessList($lines, uniqid());
         $this->write($entities);
+    }
+
+    /**
+     * Get process list.
+     *
+     * @param iterable $lines       Reader output.
+     * @param string   $accountCode Account code.
+     *
+     * @return iterable
+     * @throws Throwable
+     */
+    private function getProcessList(iterable $lines, string $accountCode): iterable
+    {
+        $processor = new DataMapProcessor(static::getContainer());
+        $yaml = str_replace(
+            '{{account.code}}',
+            $accountCode,
+            file_get_contents(
+                __DIR__ . '/../Resources/import/bp.processor.config.yaml'
+            )
+        );
+        $processorOptions = Yaml::parse($yaml);
+
+        return $processor->process($lines, $processorOptions);
+    }
+
+    /**
+     * Get read list.
+     *
+     * @return iterable
+     * @throws Throwable
+     */
+    private function getReadList(): iterable
+    {
+        $reader = new CsvFileReader();
+        $readerOptions = Yaml::parseFile(
+            __DIR__ . '/../Resources/import/bp.reader.config.yaml'
+        );
+        $readerOptions[CsvFileReader::OPTION_PROGRESS_BAR] = new EventProgress(
+            $this->dispatcher
+        );
+
+        return $reader->read(
+            __DIR__ . '/../Resources/import/bp.csv',
+            $readerOptions
+        );
     }
 
     /**
@@ -106,12 +164,8 @@ class FullImportTest extends KernelTestCase
      */
     private function process(iterable $lines): iterable
     {
-        $processor = new DataMapProcessor(static::getContainer());
-        $processorOptions = Yaml::parseFile(
-            __DIR__ . '/../Resources/import/bp.processor.config.yaml'
-        );
-
-        $entityList = $processor->process($lines, $processorOptions);
+        $accountCode = uniqid();
+        $entityList = $this->getProcessList($lines, $accountCode);
         $this->assertCount(8, $entityList);
         $this->assertInstanceOf(Iterator::class, $entityList);
 
@@ -125,7 +179,7 @@ class FullImportTest extends KernelTestCase
         $this->assertInstanceOf(Transaction::class, $transaction);
         $this->assertEquals('Test account', $account->getName());
         $this->assertEquals('EUR', $account->getCurrency()?->getCode());
-        $this->assertEquals('000001', $account->getCode());
+        $this->assertEquals($accountCode, $account->getCode());
         $this->assertNull($account->getId());
         $this->assertSame($account, $transaction->getAccount());
         $this->assertEquals('SNCF INTERNET PARIS 10', $transaction->getName());
@@ -170,18 +224,7 @@ class FullImportTest extends KernelTestCase
      */
     private function read(): iterable
     {
-        $reader = new CsvFileReader();
-        $readerOptions = Yaml::parseFile(
-            __DIR__ . '/../Resources/import/bp.reader.config.yaml'
-        );
-        $readerOptions[CsvFileReader::OPTION_PROGRESS_BAR] = new EventProgress(
-            $this->dispatcher
-        );
-
-        $lines = $reader->read(
-            __DIR__ . '/../Resources/import/bp.csv',
-            $readerOptions
-        );
+        $lines = $this->getReadList();
         $this->assertEquals(1, $this->start);
         $this->assertEquals(1, $this->advance);
         $this->assertEquals(0, $this->finish);

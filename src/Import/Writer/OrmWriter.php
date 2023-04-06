@@ -15,11 +15,6 @@ class OrmWriter extends AbstractWriter
 {
 
     /**
-     * Bulk persist option.
-     */
-    public const OPTION_BULK_PERSIST = 'bulk-persist';
-
-    /**
      * @param EntityManagerInterface $manager Doctrine object manager.
      */
     public function __construct(
@@ -41,19 +36,14 @@ class OrmWriter extends AbstractWriter
      */
     protected function execute(mixed $input, array $options): array
     {
-        $bulkPersist = $options[self::OPTION_BULK_PERSIST] ?? false;
         $entities = [];
 
         if (is_iterable($input)) {
             foreach ($input as $item) {
-                $this->writeEntity($item, $bulkPersist, $entities);
+                $this->writeEntity($item, $entities);
             }
         } else {
-            $this->writeEntity($input, $bulkPersist, $entities);
-        }
-
-        if ($bulkPersist) {
-            $this->manager->flush();
+            $this->writeEntity($input, $entities);
         }
 
         return $entities;
@@ -73,25 +63,21 @@ class OrmWriter extends AbstractWriter
      * Write entities.
      *
      * @param array|object $entity      Entity or entity list.
-     * @param bool         $bulkPersist True if bulk persist.
      * @param object[]     $entities    Entity stack.
      *
      * @return void
      */
-    private function writeEntity(
-        array|object $entity,
-        bool $bulkPersist,
-        array &$entities,
-    ): void {
+    private function writeEntity(array|object $entity, array &$entities): void
+    {
         if (is_array($entity)) {
             foreach ($entity as $entry) {
-                $this->writeEntity($entry, $bulkPersist, $entities);
+                $this->writeEntity($entry, $entities);
             }
             return;
         }
 
         $this->manager->persist($entity);
-        !$bulkPersist && $this->manager->flush();
+        $this->manager->flush();
 
         if (!in_array($entity, $entities)) {
             $entities[] = $entity;

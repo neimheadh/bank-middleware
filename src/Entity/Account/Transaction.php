@@ -2,6 +2,7 @@
 
 namespace App\Entity\Account;
 
+use App\Event\ORM\EntityListener\Account\TransactionEntityListener;
 use App\Model\Entity\Account\Link\AccountManyToOneInterface;
 use App\Model\Entity\Account\Link\AccountManyToOneTrait;
 use App\Model\Entity\Currency\BalancedEntityTrait;
@@ -17,11 +18,13 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 use Sonata\Form\Type\DatePickerType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 /**
  * Account transaction.
  */
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
+#[ORM\EntityListeners([TransactionEntityListener::class])]
 #[ORM\Table(name: 'app_account_transaction')]
 #[Sonata\Admin(
     formFields: [
@@ -29,8 +32,9 @@ use Sonata\Form\Type\DatePickerType;
         'transactionDate' => new Sonata\FormField(
             type: DatePickerType::class
         ),
-        'writeDate' => new Sonata\FormField(
-            type: DatePickerType::class
+        'processed' => new Sonata\FormField(
+            type: CheckboxType::class,
+            options: ['required' => false]
         ),
         'name' => new Sonata\FormField(),
         'balance' => new Sonata\FormField(),
@@ -38,8 +42,9 @@ use Sonata\Form\Type\DatePickerType;
     ],
     listFields: [
         'transactionDate' => new Sonata\ListField(),
-        'writeDate' => new Sonata\ListField(),
+        'processDate' => new Sonata\ListField(),
         'name' => new Sonata\ListField(),
+        'account' => new Sonata\ListField(),
         'balance' => new Sonata\ListField(
             type: FieldDescriptionInterface::TYPE_BALANCE,
             fieldDescriptionOptions: [
@@ -73,16 +78,19 @@ class Transaction implements EntityInterface,
     private ?Account $account = null;
 
     /**
-     * Transaction due date.
+     * Transaction procession date.
+     *
+     * Write date is used to differentiate processed and unprocessed
+     * transaction, whatever the date set is before or after the current date.
      *
      * @var DateTimeInterface|null
      */
     #[ORM\Column(
-        name: 'due_date',
+        name: 'process_date',
         type: 'datetime',
         nullable: true
     )]
-    private ?DateTimeInterface $writeDate = null;
+    private ?DateTimeInterface $processDate = null;
 
     /**
      * Transaction date.
@@ -103,13 +111,13 @@ class Transaction implements EntityInterface,
     }
 
     /**
-     * Get due date.
+     * Get procession date.
      *
      * @return DateTimeInterface|null
      */
-    public function getWriteDate(): ?DateTimeInterface
+    public function getProcessDate(): ?DateTimeInterface
     {
-        return $this->writeDate;
+        return $this->processDate;
     }
 
     /**
@@ -123,15 +131,61 @@ class Transaction implements EntityInterface,
     }
 
     /**
+     * Get if transaction is processed.
+     *
+     * @return bool
+     */
+    public function isProcessed(): bool
+    {
+        return $this->processDate !== null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAccount(?Account $account): self
+    {
+        if ($this->account !== $account) {
+            $this->account?->removeTransaction($this);
+            $this->account = $account;
+            $this->account?->addTransaction($this);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set due date.
      *
-     * @param DateTimeInterface|null $writeDate Due date.
+     * @param DateTimeInterface|null $processDate Due date.
      *
      * @return $this
      */
-    public function setWriteDate(?DateTimeInterface $writeDate): self
+    public function setProcessDate(?DateTimeInterface $processDate): self
     {
-        $this->writeDate = $writeDate;
+        $this->processDate = $processDate;
+
+        return $this;
+    }
+
+    /**
+     * Set transaction processed status.
+     *
+     * Set the procession date to current date if it was not set before.
+     *
+     * @param bool $processed Processed status.
+     *
+     * @return $this
+     */
+    public function setProcessed(bool $processed): self
+    {
+        if ($processed && $this->processDate === null) {
+            $this->setProcessDate(new DateTime());
+        }
+
+        if (!$processed && $this->processDate !== null) {
+            $this->setProcessDate(null);
+        }
 
         return $this;
     }

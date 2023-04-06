@@ -29,7 +29,7 @@ trait BalancedEntityTrait
         float $balance,
         ?Currency $currency = null
     ): self {
-        $this->balance += $currency
+        $this->balance += $currency && $this->currency
             ? $this->currency->convert($currency, $balance)
             : $balance;
 
@@ -39,17 +39,26 @@ trait BalancedEntityTrait
     /**
      * {@inheritDoc}
      */
-    public function getBalance(): ?float
+    public function getBalance(?Currency $currency = null): ?float
     {
-        return $this->balance;
+        return $currency && $this->currency
+            ? $currency->convert($this->currency, $this->balance)
+            : ($this->currency
+                ? $this->currency->round($this->balance)
+                : $this->balance
+            );
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setBalance(?float $balance): self
-    {
-        $this->balance = $balance;
+    public function setBalance(
+        ?float $balance,
+        ?Currency $currency = null
+    ): self {
+        $this->balance = $currency && $this->currency
+            ? $this->currency->convert($currency, $balance)
+            : $balance;
 
         return $this;
     }
@@ -61,7 +70,7 @@ trait BalancedEntityTrait
         float $balance,
         ?Currency $currency = null
     ): self {
-        $this->balance -= $currency
+        $this->balance -= $currency && $this->currency
             ? $this->currency->convert($currency, $balance)
             : $balance;
 

@@ -148,7 +148,10 @@ class Currency implements DatedEntityInterface,
      */
     public function convert(self $currency, float $value): float
     {
-        return ($value * $currency->usdExchangeRate) / $this->usdExchangeRate;
+        $exchange = $currency->usdExchangeRate ?: 1;
+        $selfExchange = $this->usdExchangeRate ?: 1;
+
+        return $this->round(($value * $exchange) / $selfExchange);
     }
 
     /**
@@ -199,6 +202,24 @@ class Currency implements DatedEntityInterface,
     public function getUsdExchangeRate(): ?float
     {
         return $this->usdExchangeRate;
+    }
+
+    /**
+     * Round given value.
+     *
+     * @param float $value Rounded value.
+     *
+     * @return float
+     */
+    public function round(float $value): float
+    {
+        $p = $this->rounded === null
+            ? 1
+            : pow(10, $this->rounded);
+
+        return $this->rounded === null
+            ? $value
+            : round($value * $p) / $p;
     }
 
     /**

@@ -27,18 +27,24 @@ interface BalancedManyToOneInterface extends CurrencyManyToOneInterface
     /**
      * Get entity balance.
      *
+     * @param Currency|null $currency Returned balance currency.
+     *
      * @return float|null
      */
-    public function getBalance(): ?float;
+    public function getBalance(?Currency $currency = null): ?float;
 
     /**
      * Set entity balance.
      *
-     * @param float|null $balance Entity balance.
+     * @param float|null    $balance  Entity balance.
+     * @param Currency|null $currency Given balance currency.
      *
      * @return $this
      */
-    public function setBalance(?float $balance): self;
+    public function setBalance(
+        ?float $balance,
+        ?Currency $currency = null
+    ): self;
 
     /**
      * Subtract value to the balance.
