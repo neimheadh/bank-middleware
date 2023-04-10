@@ -5,8 +5,10 @@ namespace App\Entity\Account;
 use App\Event\ORM\EntityListener\Account\TransactionEntityListener;
 use App\Model\Entity\Account\Link\AccountManyToOneInterface;
 use App\Model\Entity\Account\Link\AccountManyToOneTrait;
+use App\Model\Entity\Budget\Link\BudgetManyToOneInterface;
+use App\Model\Entity\Budget\Link\BudgetManyToOneTrait;
+use App\Model\Entity\Currency\BalancedEntityInterface;
 use App\Model\Entity\Currency\BalancedEntityTrait;
-use App\Model\Entity\Currency\BalancedManyToOneInterface;
 use App\Model\Entity\Generic\EntityInterface;
 use App\Model\Entity\Generic\EntityTrait;
 use App\Model\Entity\Generic\NamedEntityInterface;
@@ -21,7 +23,6 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Sonata\AdminBundle\Form\Type\ModelAutocompleteType;
-use Sonata\Form\Type\BooleanType;
 use Sonata\Form\Type\DatePickerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
@@ -37,7 +38,11 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
         'account' => new Sonata\FormField(),
         'thirdParty' => new Sonata\FormField(
             type: ModelAutocompleteType::class,
-            options: ['property' => 'name']
+            options: ['property' => 'name', 'required' => false],
+        ),
+        'budget' => new Sonata\FormField(
+            type: ModelAutocompleteType::class,
+            options: ['property' => 'name', 'required' => false]
         ),
         'transactionDate' => new Sonata\FormField(
             type: DatePickerType::class
@@ -54,6 +59,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
         'transactionDate' => new Sonata\ListField(),
         'processDate' => new Sonata\ListField(),
         'thirdParty' => new Sonata\ListField(),
+        'budget' => new Sonata\ListField(),
         'name' => new Sonata\ListField(),
         'account' => new Sonata\ListField(),
         'balance' => new Sonata\ListField(
@@ -65,7 +71,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
         'processed' => new Sonata\ListField(
             type: FieldDescriptionInterface::TYPE_BOOLEAN,
             fieldDescriptionOptions: [
-                'editable' => true
+                'editable' => true,
             ]
         ),
     ],
@@ -77,8 +83,9 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 class Transaction implements EntityInterface,
                              NamedEntityInterface,
                              AccountManyToOneInterface,
-                             BalancedManyToOneInterface,
-                             ThirdPartyManyToOneInterface
+                             BalancedEntityInterface,
+                             ThirdPartyManyToOneInterface,
+                             BudgetManyToOneInterface
 {
 
     use EntityTrait;
@@ -86,6 +93,7 @@ class Transaction implements EntityInterface,
     use AccountManyToOneTrait;
     use BalancedEntityTrait;
     use ThirdPartyManyToOneTrait;
+    use BudgetManyToOneTrait;
 
     /**
      * Transaction account.

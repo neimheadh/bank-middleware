@@ -4,6 +4,7 @@ namespace App\Event\ORM\EntityListener\Account;
 
 
 use App\Entity\Account\Transaction;
+use App\Model\Entity\Currency\BalancedEntityInterface;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
@@ -31,6 +32,10 @@ final class TransactionEntityListener
             $transaction->getBalance(),
             $transaction->getCurrency()
         );
+        $transaction->getBudget()?->addBalance(
+            $transaction->getBalance(),
+            $transaction->getCurrency()
+        );
     }
 
     /**
@@ -51,6 +56,10 @@ final class TransactionEntityListener
                 $transaction->getBalance(),
                 $transaction->getCurrency()
             );
+        $transaction->getBudget()?->subtractBalance(
+            $transaction->getBalance(),
+            $transaction->getCurrency()
+        );
     }
 
     /**
@@ -67,7 +76,20 @@ final class TransactionEntityListener
         PreUpdateEventArgs $args
     ): void {
         $manager = $args->getObjectManager();
-        $this->updateAccountBalance($transaction, $args);
+        $transaction->getAccount() && $this->updateBalanced(
+            $transaction,
+            $args,
+            $transaction->getAccount(),
+            'account',
+            true
+        );
+        $transaction->getBudget() && $this->updateBalanced(
+            $transaction,
+            $args,
+            $transaction->getBudget(),
+            'budget',
+            false
+        );
         $manager->persist($transaction->getAccount());
     }
 
@@ -79,17 +101,20 @@ final class TransactionEntityListener
      *
      * @return void
      */
-    private function updateAccountBalance(
+    private function updateBalanced(
         Transaction $transaction,
-        PreUpdateEventArgs $args
+        PreUpdateEventArgs $args,
+        BalancedEntityInterface $balanced,
+        string $field,
+        bool $processDate
     ): void {
-        if ($args->hasChangedField('processDate')) {
+        if ($processDate && $args->hasChangedField('processDate')) {
             $oldProcessDate = $args->getOldValue('processDate');
             $processDate = $transaction->getProcessDate();
 
 
             if ($oldProcessDate === null && $processDate !== null) {
-                $transaction->getAccount()?->addBalance(
+                $balanced->addBalance(
                     $transaction->getBalance(),
                     $transaction->getCurrency()
                 );
@@ -98,7 +123,7 @@ final class TransactionEntityListener
             }
 
             if ($oldProcessDate !== null && $processDate === null) {
-                $transaction->getAccount()?->subtractBalance(
+                $balanced->subtractBalance(
                     $transaction->getBalance(),
                     $transaction->getCurrency()
                 );
@@ -107,8 +132,8 @@ final class TransactionEntityListener
             }
         }
 
-        $oldAccount = $args->hasChangedField('account')
-            ? $args->getOldValue('account')
+        $oldValue = $args->hasChangedField($field)
+            ? $args->getOldValue($field)
             : $transaction->getAccount();
         $oldBalance = $args->hasChangedField('balance')
             ? $args->getOldValue('balance')
@@ -117,8 +142,8 @@ final class TransactionEntityListener
             ? $args->getOldValue('currency')
             : $transaction->getCurrency();
 
-        $oldAccount?->subtractBalance($oldBalance, $oldCurrency);
-        $transaction->getAccount()?->addBalance(
+        $oldValue?->subtractBalance($oldBalance, $oldCurrency);
+        $balanced->addBalance(
             $transaction->getBalance(),
             $transaction->getCurrency()
         );

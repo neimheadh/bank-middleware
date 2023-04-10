@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Model\Entity\Balance\Link;
+namespace App\Model\Entity\Budget\Link;
+
+use App\Entity\Budget\Budget;
 
 /**
  * Entity with budget.
@@ -8,4 +10,19 @@ namespace App\Model\Entity\Balance\Link;
 interface BudgetManyToOneInterface
 {
 
+    /**
+     * Get budget.
+     *
+     * @return Budget|null
+     */
+    public function getBudget(): ?Budget;
+
+    /**
+     * Set budget.
+     *
+     * @param Budget|null $budget Budget.
+     *
+     * @return $this
+     */
+    public function setBudget(?Budget $budget): self;
 }

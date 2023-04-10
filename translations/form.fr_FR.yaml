@@ -3,6 +3,7 @@ Account:
     label:
       balance: Montant
       third_party: Tiers
+      budget: Budget
       name: Titre
       submit: Valider
 

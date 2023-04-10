@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\ThirdParty\Type;
+namespace App\Form\Budget\Type;
 
-use App\Entity\ThirdParty\ThirdParty;
+use App\Entity\Budget\Budget;
 use App\Form\Generic\Type\EntityAutocompleteType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -12,7 +12,7 @@ use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
  * Third party autocomplete form type.
  */
 #[AsEntityAutocompleteField]
-class ThirdPartyAutocompleteType extends AbstractType
+class BudgetAutocompleteType extends AbstractType
 {
 
     /**
@@ -21,7 +21,7 @@ class ThirdPartyAutocompleteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'class' => ThirdParty::class,
+            'class' => Budget::class,
         ]);
     }
 
@@ -30,7 +30,7 @@ class ThirdPartyAutocompleteType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'app_third_party_autocomplete';
+        return 'app_budget_autocomplete';
     }
 
     /**

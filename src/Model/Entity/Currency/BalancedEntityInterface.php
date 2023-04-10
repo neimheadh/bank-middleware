@@ -8,7 +8,7 @@ use App\Model\Entity\Currency\Link\CurrencyManyToOneInterface;
 /**
  * Entity with balance.
  */
-interface BalancedManyToOneInterface extends CurrencyManyToOneInterface
+interface BalancedEntityInterface extends CurrencyManyToOneInterface
 {
 
     /**

@@ -10,6 +10,8 @@ sonata_admin:
 
         groups:
             Account:
+              icon: 'fas fa-university'
+            Budget:
               icon: 'fas fa-piggy-bank'
             ThirdParty:
               icon: 'fas fa-users'

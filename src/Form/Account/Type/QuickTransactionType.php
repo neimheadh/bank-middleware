@@ -2,9 +2,8 @@
 
 namespace App\Form\Account\Type;
 
-use App\Entity\ThirdParty\ThirdParty;
+use App\Form\Budget\Type\BudgetAutocompleteType;
 use App\Form\ThirdParty\Type\ThirdPartyAutocompleteType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -38,6 +37,14 @@ class QuickTransactionType extends AbstractType
             ThirdPartyAutocompleteType::class,
             [
                 'label' => 'Account.quick_transaction.label.third_party',
+                'required' => false,
+                'translation_domain' => $options['translation_domain'],
+            ]
+        )->add(
+            'budget',
+            BudgetAutocompleteType::class,
+            [
+                'label' => 'Account.quick_transaction.label.budget',
                 'required' => false,
                 'translation_domain' => $options['translation_domain'],
             ]

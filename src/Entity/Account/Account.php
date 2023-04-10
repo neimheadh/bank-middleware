@@ -3,7 +3,7 @@
 namespace App\Entity\Account;
 
 use App\Event\ORM\EntityListener\Account\AccountEntityListener;
-use App\Model\Entity\Currency\BalancedManyToOneInterface;
+use App\Model\Entity\Currency\BalancedEntityInterface;
 use App\Model\Entity\Currency\BalancedEntityTrait;
 use App\Model\Entity\Generic\CodeEntityInterface;
 use App\Model\Entity\Generic\CodeEntityTrait;
@@ -51,7 +51,7 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 #[ORM\Table(name: 'app_account_account')]
 class Account implements EntityInterface,
                          NamedEntityInterface,
-                         BalancedManyToOneInterface,
+                         BalancedEntityInterface,
                          CodeEntityInterface
 {
 
