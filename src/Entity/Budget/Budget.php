@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[AutocompletedEntity(field: 'name')]
 #[ORM\Entity]
-#[ORM\Table(name: 'budget_budget')]
+#[ORM\Table(name: 'app_budget_budget')]
 #[Sonata\Admin]
 class Budget implements EntityInterface,
                         NamedEntityInterface,

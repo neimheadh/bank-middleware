@@ -1,0 +1,7 @@
+sonata_user:
+  class:
+    user: App\Entity\User\User
+  resetting:
+    email:
+      address: debian@localhost
+      sender_name: Sonata Admin

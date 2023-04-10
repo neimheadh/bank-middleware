@@ -18,7 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
  * Sonata block.
  */
 #[ORM\Entity(repositoryClass: BlockRepository::class)]
-#[ORM\Table(name: 'block_block')]
+#[ORM\Table(name: 'app_block_block')]
 #[Sonata\Admin(group: 'Settings',
     formFields: [
         'class' => new Sonata\FormField(
