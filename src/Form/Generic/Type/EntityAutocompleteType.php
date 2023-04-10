@@ -41,13 +41,13 @@ class EntityAutocompleteType extends AbstractType
                 $options = $event->getForm()->getConfig()->getOptions();
                 $autocomplete = $data['autocomplete'] ?? null;
 
-                if (is_string($autocomplete)) {
+                if (is_string($autocomplete) && !is_numeric($autocomplete)) {
                     $class = new ReflectionClass($options['class']);
                     $attribute = current(
                         $class->getAttributes(AutocompletedEntity::class)
                     );
 
-                    if ($attribute !== null) {
+                    if ($attribute) {
                         $attribute = $attribute->newInstance();
                         /** @var AutocompletedEntity $attribute */
                         $entity = $class->newInstance();
