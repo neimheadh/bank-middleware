@@ -29,6 +29,7 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
         'symbol' => new Sonata\FormField(),
         'nativeSymbol' => new Sonata\FormField(),
         'rounded' => new Sonata\FormField(),
+        'decimalDigits' => new Sonata\FormField(),
         'usdExchangeRate' => new Sonata\FormField(),
     ],
     listFields: [
