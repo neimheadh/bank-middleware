@@ -19,7 +19,9 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
+use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Sonata\AdminBundle\Form\Type\ModelAutocompleteType;
+use Sonata\Form\Type\BooleanType;
 use Sonata\Form\Type\DatePickerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
@@ -58,6 +60,12 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
             type: 'balance',
             fieldDescriptionOptions: [
                 'currency_field' => 'currency',
+            ]
+        ),
+        'processed' => new Sonata\ListField(
+            type: FieldDescriptionInterface::TYPE_BOOLEAN,
+            fieldDescriptionOptions: [
+                'editable' => true
             ]
         ),
     ],

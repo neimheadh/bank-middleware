@@ -3,6 +3,7 @@ twig:
 
     form_themes:
         - '@SonataForm/Form/datepicker.html.twig'
+        - 'bootstrap_4_layout.html.twig'
         - 'form/ThirdParty/third_party_autocomplete.type.html.twig'
         - 'form/array.type.html.twig'
         - 'form/entity_autocomplete.type.html.twig'

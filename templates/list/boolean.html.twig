@@ -1,0 +1,34 @@
+{% extends '@SonataAdmin/CRUD/list_boolean.html.twig' %}
+
+{% block field_span_attributes %}{% endblock %}
+
+{% block field %}
+    {% if is_editable %}
+        <div class="custom-control custom-switch" {{ stimulus_controller('list--boolean', {
+            "url": path(
+                'sonata_admin_set_object_field_value',
+                {
+                    '_sonata_admin': admin.baseCodeRoute,
+                    'context': 'list',
+                    'field': field_description.name,
+                    'objectId': admin.urlSafeIdentifier(object)
+                } + (admin.hasRequest() ? admin.request.attributes.get('_route_params', {}) : {})
+                + admin.getPersistentParameters()
+                + app.request.query.all|default({})
+            ),
+            "pk": object.id
+        }) }}>
+            <input
+                    type="checkbox"
+                    class="custom-control-input"
+                    data-sonata-icheck="false" {{ stimulus_target('list--boolean', 'input') }}
+                    {% if value %}checked="checked"{% endif %}
+            />
+        </div>
+    {% else %}
+        {%- include '@SonataAdmin/CRUD/display_boolean.html.twig' with {
+            value: value,
+            inverse: field_description.option('inverse'),
+        } only -%}
+    {% endif %}
+{% endblock %}
