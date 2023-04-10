@@ -1,26 +1,28 @@
 {% extends sonata_block.templates.block_base %}
 
 {% block block %}
-    <div class="box box-primary"
-         {{ stimulus_controller('block--Account--quick-transaction') }}
-    >
-        <div class="box-header">
-            <h3 class="box-title">{{ settings.title | trans({'{{ account }}': account}, 'admin') }}</h3>
+    {% if form %}
+        <div class="box box-primary"
+             {{ stimulus_controller('block--Account--quick-transaction') }}
+        >
+            <div class="box-header">
+                <h3 class="box-title">{{ settings.title | trans({'{{ account }}': account}, 'admin') }}</h3>
+            </div>
+            {{ form_start(form) }}
+                <div class="box-body">
+                    {{ form_row(form.balance, {
+                        "attr": {
+                            "data-block--account--quick-transaction-target": "balance"
+                        }
+                    }) }}
+                    {{ form_row(form.thirdParty) }}
+                    {{ form_row(form.budget) }}
+                    {{ form_row(form.name) }}
+                </div>
+                <div class="box-footer align-right">
+                    {{ form_row(form.submit) }}
+                </div>
+            {{ form_end(form) }}
         </div>
-        {{ form_start(form) }}
-            <div class="box-body">
-                {{ form_row(form.balance, {
-                    "attr": {
-                        "data-block--account--quick-transaction-target": "balance"
-                    }
-                }) }}
-                {{ form_row(form.thirdParty) }}
-                {{ form_row(form.budget) }}
-                {{ form_row(form.name) }}
-            </div>
-            <div class="box-footer align-right">
-                {{ form_row(form.submit) }}
-            </div>
-        {{ form_end(form) }}
-    </div>
+    {% endif %}
 {% endblock block %}

@@ -1,22 +1,18 @@
 sonata_admin:
-    title: 'Sonata Admin'
-    dashboard:
-        blocks:
-            - position: top
-              type: App\Block\Account\QuickTransactionBlock
-              class: col-md-12
-              settings:
-                  account: 1
+  title: 'Sonata Admin'
+  dashboard:
+    blocks: []
 
-        groups:
-            Account:
-              icon: 'fas fa-university'
-            Budget:
-              icon: 'fas fa-piggy-bank'
-            ThirdParty:
-              icon: 'fas fa-users'
-            Settings:
-              icon: 'fas fa-cogs'
+    groups:
+      Account:
+        icon: 'fas fa-university'
+      Budget:
+        icon: 'fas fa-piggy-bank'
+      ThirdParty:
+        icon: 'fas fa-users'
+      Settings:
+        icon: 'fas fa-cogs'
 
-    templates:
-        layout: 'base.html.twig'
+  templates:
+    dashboard: 'dashboard/dashboard.html.twig'
+    layout: 'base.html.twig'

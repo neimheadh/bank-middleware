@@ -108,23 +108,26 @@ final class QuickTransactionBlock extends AbstractBlockService implements
         assert(null !== $template);
 
         $account = $settings['account']
-            ? $this->accountRepository->findOneByCode($settings['account'])
+            ? $this->accountRepository->find($settings['account'])
             : null;
+        $form = null;
 
-        $form = $this->getForm($account);
-        $form->handleRequest($this->requestStack->getCurrentRequest());
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->persist($form->getData());
-            $this->manager->flush();
-
+        if ($account) {
             $form = $this->getForm($account);
+            $form->handleRequest($this->requestStack->getCurrentRequest());
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->manager->persist($form->getData());
+                $this->manager->flush();
+
+                $form = $this->getForm($account);
+            }
         }
 
         return $this->renderResponse($template, [
             'account' => $account,
             'block' => $blockContext->getBlock(),
-            'form' => $form->createView(),
+            'form' => $form?->createView(),
             'settings' => $settings,
         ]);
     }
