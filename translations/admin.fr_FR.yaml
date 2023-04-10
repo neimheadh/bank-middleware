@@ -25,3 +25,11 @@ Profile:
       readerConfiguration: Configuration reader
       writer: Writer
       writerConfiguration: Configuration writer
+
+Account:
+  block:
+    quick_transaction:
+      title: Transaction rapide ({{ account }})
+  list:
+    action:
+      transactions: 'Transactions'

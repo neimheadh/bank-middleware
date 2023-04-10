@@ -2,6 +2,8 @@
 
 namespace App\Entity\Import;
 
+use App\Form\Generic\Type\ArrayType;
+use App\Form\Generic\Type\ClassChoiceType;
 use App\Model\Entity\Generic\CodeEntityInterface;
 use App\Model\Entity\Generic\CodeEntityTrait;
 use App\Model\Entity\Generic\EntityInterface;
@@ -9,8 +11,6 @@ use App\Model\Entity\Generic\EntityTrait;
 use App\Model\Entity\Generic\NamedEntityInterface;
 use App\Model\Entity\Generic\NamedEntityTrait;
 use App\Repository\Import\ProfileRepository;
-use App\Type\Form\ArrayType;
-use App\Type\Form\ClassChoiceType;
 use Doctrine\ORM\Mapping as ORM;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 

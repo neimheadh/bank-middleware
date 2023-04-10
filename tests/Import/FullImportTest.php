@@ -4,6 +4,7 @@ namespace App\Tests\Import;
 
 use App\Entity\Account\Account;
 use App\Entity\Account\Transaction;
+use App\Entity\ThirdParty\ThirdParty;
 use App\Import\Monitoring\Event\ProgressAdvanceEvent;
 use App\Import\Monitoring\Event\ProgressFinishEvent;
 use App\Import\Monitoring\Event\ProgressStartEvent;
@@ -171,10 +172,11 @@ class FullImportTest extends KernelTestCase
 
         $entities = $entityList->current();
         $this->assertIsArray($entities);
-        $this->assertCount(2, $entities);
+        $this->assertCount(3, $entities);
 
         $account = $entities[0];
-        $transaction = $entities[1];
+        $thirdParty = $entities[1];
+        $transaction = $entities[2];
         $this->assertInstanceOf(Account::class, $account);
         $this->assertInstanceOf(Transaction::class, $transaction);
         $this->assertEquals('Test account', $account->getName());
@@ -185,6 +187,7 @@ class FullImportTest extends KernelTestCase
         $this->assertEquals('SNCF INTERNET PARIS 10', $transaction->getName());
         $this->assertEquals('EUR', $transaction->getCurrency()?->getCode());
         $this->assertSame(62.0, $transaction->getBalance());
+        $this->assertEquals('SNCF', $thirdParty->getName());
         $this->assertSame(
             '07/02/2023',
             $transaction->getCreatedAt()?->format('d/m/Y')
@@ -193,8 +196,8 @@ class FullImportTest extends KernelTestCase
 
         $entityList->next();
         $entities = $entityList->current();
-        $this->assertCount(2, $entities);
-        $transaction = $entities[1];
+        $this->assertCount(3, $entities);
+        $transaction = $entities[2];
         $this->assertSame($account, $entities[0]);
         $this->assertSame($account, $transaction->getAccount());
         $this->assertEquals('Cbp France', $transaction->getName());
@@ -341,9 +344,10 @@ class FullImportTest extends KernelTestCase
         $wrote = $writer->write($entities);
         $this->assertEquals(8, $entities->key());
 
-        $this->assertCount(9, $wrote);
+        $this->assertCount(15, $wrote);
         $this->assertInstanceOf(Account::class, $wrote[0]);
-        $this->assertInstanceOf(Transaction::class, $wrote[1]);
+        $this->assertInstanceOf(ThirdParty::class, $wrote[1]);
+        $this->assertInstanceOf(Transaction::class, $wrote[2]);
 
         $this->assertEquals(
             $accounts + 1,

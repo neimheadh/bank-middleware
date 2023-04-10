@@ -12,7 +12,6 @@ use App\Model\Entity\Generic\EntityTrait;
 use App\Model\Entity\Generic\NamedEntityInterface;
 use App\Model\Entity\Generic\NamedEntityTrait;
 use App\Repository\Account\AccountRepository;
-use App\Type\FieldDescriptionInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,6 +19,12 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
  * Bank account.
+ *
+ * @Sonata\ListAction(name="edit")
+ * @Sonata\ListAction(name="account_transaction_list", options={
+ *     "template": "list/Account/transactions_action.html.twig"
+ * })
+ * @Sonata\ListAction(name="delete")
  */
 #[Sonata\Admin(
     formFields: [
@@ -33,14 +38,14 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
     listFields: [
         'code' => new Sonata\ListField(),
         'name' => new Sonata\ListField(),
-        'balance' => new Sonata\ListField(
-            type: FieldDescriptionInterface::TYPE_BALANCE
-        ),
-        'futureBalance' => new Sonata\ListField(
-            type: FieldDescriptionInterface::TYPE_BALANCE
-        )
+        'balance' => new Sonata\ListField(type: 'balance'),
+        'futureBalance' => new Sonata\ListField(type: 'balance'),
+    ],
+    showFields: [
+        'transactions' => new Sonata\ShowField()
     ]
 )]
+#[Sonata\AddChild(class: Transaction::class, field: 'account')]
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
 #[ORM\EntityListeners([AccountEntityListener::class])]
 #[ORM\Table(name: 'app_account_account')]

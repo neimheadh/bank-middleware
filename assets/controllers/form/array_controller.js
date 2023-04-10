@@ -75,13 +75,6 @@ export default class extends Controller {
   }
 
   /**
-   * @inheritDoc
-   */
-  connect() {
-    console.log('Initialize array')
-  }
-
-  /**
    * Add array line.
    *
    * @param {Event} event Thrown event.

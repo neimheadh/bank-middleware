@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Type\Form\Extension;
+namespace App\Form\Generic\Extension;
 
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormTypeExtensionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -11,7 +12,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  *
  * Configure default options for form types.
  */
-class FormExtension extends AbstractTypeExtension
+class FormExtension extends AbstractTypeExtension implements
+    FormTypeExtensionInterface
 {
 
     /**
@@ -20,7 +22,6 @@ class FormExtension extends AbstractTypeExtension
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefault('translation_domain', 'admin');
-
     }
 
     /**

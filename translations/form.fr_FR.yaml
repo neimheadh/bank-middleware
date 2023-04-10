@@ -1,3 +1,11 @@
+Account:
+  quick_transaction:
+    label:
+      balance: Montant
+      third_party: Tiers
+      name: Titre
+      submit: Valider
+
 array:
   label:
     actions: ''
@@ -7,3 +15,4 @@ array:
   placeholder:
     key: Clé
     value: Valeur
+

@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Block\:
+    resource: '../../src/Block'
+    tags:
+      - name: sonata.block

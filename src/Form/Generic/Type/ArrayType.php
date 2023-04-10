@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Type\Form;
+namespace App\Form\Generic\Type;
 
-use App\Type\Form\Transformer\AssociativeToFlatArrayTransformer;
-use App\Type\Form\Transformer\StringParseTransformer;
+use App\Form\Generic\DataTransformer\ArrayToYamlTransformer;
+use App\Form\Generic\DataTransformer\AssociativeToFlatArrayTransformer;
+use App\Form\Generic\DataTransformer\StringParseTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PostSetDataEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
@@ -49,6 +51,9 @@ class ArrayType extends AbstractType
         FormBuilderInterface $builder,
         array $options
     ): void {
+        $builder->addModelTransformer(new ArrayToYamlTransformer(10, 2));
+
+        return;
         $builder->addModelTransformer($this->associativeTransformer)
             ->addModelTransformer($this->stringParseTransformer);
 
@@ -78,6 +83,7 @@ class ArrayType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
+        return '_app_form_type_array';
         return 'app_form_type_array';
     }
 
@@ -86,6 +92,7 @@ class ArrayType extends AbstractType
      */
     public function getParent(): string
     {
+        return TextareaType::class;
         return FormType::class;
     }
 

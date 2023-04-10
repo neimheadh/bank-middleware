@@ -13,11 +13,23 @@
       name:
         fixed: 'Test account'
 
+  thirdParty:
+    class: App\Entity\ThirdParty\ThirdParty
+    identifier: name
+    map:
+      name:
+        value: Libelle simplifie
+
   transaction:
     class: App\Entity\Account\Transaction
     map:
       account:
         reference: 'account.{{account.code}}'
+      thirdParty:
+        parser:
+          class: App\Import\Processor\Parser\EntityReferenceParser
+          arguments: ['@doctrine.orm.entity_manager', App\Entity\ThirdParty\ThirdParty, 'name']
+        value: Libelle simplifie
       currency:
         parser:
           class: App\Import\Processor\Parser\EntityReferenceParser

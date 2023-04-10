@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Type\Form\Loader;
+namespace App\Form\Generic\ChoiceLoader;
 
 use Composer\Autoload\ClassLoader;
 use InvalidArgumentException;

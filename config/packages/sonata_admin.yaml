@@ -2,19 +2,19 @@ sonata_admin:
     title: 'Sonata Admin'
     dashboard:
         blocks:
-            - { type: sonata.admin.block.admin_list, position: left }
+            - position: top
+              type: App\Block\Account\QuickTransactionBlock
+              class: col-md-12
+              settings:
+                  account: 1
 
         groups:
             Account:
-                icon: 'fas fa-piggy-bank'
+              icon: 'fas fa-piggy-bank'
+            ThirdParty:
+              icon: 'fas fa-users'
             Settings:
-                icon: 'fas fa-cogs'
-
+              icon: 'fas fa-cogs'
 
     templates:
         layout: 'base.html.twig'
-
-sonata_block:
-    blocks:
-        sonata.admin.block.admin_list:
-            contexts: [admin]

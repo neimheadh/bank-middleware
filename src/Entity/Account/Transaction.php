@@ -11,12 +11,15 @@ use App\Model\Entity\Generic\EntityInterface;
 use App\Model\Entity\Generic\EntityTrait;
 use App\Model\Entity\Generic\NamedEntityInterface;
 use App\Model\Entity\Generic\NamedEntityTrait;
+use App\Model\Entity\ThirdParty\Link\ThirdPartyManyToOneInterface;
+use App\Model\Entity\ThirdParty\Link\ThirdPartyManyToOneTrait;
 use App\Repository\Account\TransactionRepository;
-use App\Type\FieldDescriptionInterface;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
+use Sonata\AdminBundle\Datagrid\DatagridInterface;
+use Sonata\AdminBundle\Form\Type\ModelAutocompleteType;
 use Sonata\Form\Type\DatePickerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
@@ -27,8 +30,13 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 #[ORM\EntityListeners([TransactionEntityListener::class])]
 #[ORM\Table(name: 'app_account_transaction')]
 #[Sonata\Admin(
+    group: 'hidden',
     formFields: [
         'account' => new Sonata\FormField(),
+        'thirdParty' => new Sonata\FormField(
+            type: ModelAutocompleteType::class,
+            options: ['property' => 'name']
+        ),
         'transactionDate' => new Sonata\FormField(
             type: DatePickerType::class
         ),
@@ -43,26 +51,33 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
     listFields: [
         'transactionDate' => new Sonata\ListField(),
         'processDate' => new Sonata\ListField(),
+        'thirdParty' => new Sonata\ListField(),
         'name' => new Sonata\ListField(),
         'account' => new Sonata\ListField(),
         'balance' => new Sonata\ListField(
-            type: FieldDescriptionInterface::TYPE_BALANCE,
+            type: 'balance',
             fieldDescriptionOptions: [
                 'currency_field' => 'currency',
             ]
         ),
     ],
 )]
+#[Sonata\DatagridValues([
+    DatagridInterface::SORT_BY => 'transactionDate',
+    DatagridInterface::SORT_ORDER => 'DESC',
+])]
 class Transaction implements EntityInterface,
                              NamedEntityInterface,
                              AccountManyToOneInterface,
-                             BalancedManyToOneInterface
+                             BalancedManyToOneInterface,
+                             ThirdPartyManyToOneInterface
 {
 
     use EntityTrait;
     use NamedEntityTrait;
     use AccountManyToOneTrait;
     use BalancedEntityTrait;
+    use ThirdPartyManyToOneTrait;
 
     /**
      * Transaction account.
@@ -76,6 +91,14 @@ class Transaction implements EntityInterface,
     )]
     #[ORM\JoinColumn(name: 'account_id', nullable: false, onDelete: 'CASCADE')]
     private ?Account $account = null;
+
+    /**
+     * Transaction name.
+     *
+     * @var string|null
+     */
+    #[ORM\Column(type: 'string', length: 256, nullable: true)]
+    private ?string $name = null;
 
     /**
      * Transaction procession date.
