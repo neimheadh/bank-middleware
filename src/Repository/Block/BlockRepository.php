@@ -21,4 +21,18 @@ class BlockRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Block::class);
     }
+
+    /**
+     * Find by type and position.
+     *
+     * @param int $type     Block type.
+     * @param int $position Block position.
+     *
+     * @return array<Block>
+     */
+    public function findByTypeAndPosition(int $type, int $position): array
+    {
+        return $this->findBy(['type' => $type, 'position' => $position]);
+    }
+
 }

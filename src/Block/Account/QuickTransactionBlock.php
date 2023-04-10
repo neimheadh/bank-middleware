@@ -3,27 +3,21 @@
 namespace App\Block\Account;
 
 use App\Block\BlockServiceInterface;
-use App\Block\EditableBlockService;
 use App\Entity\Account\Account;
 use App\Entity\Account\Transaction;
 use App\Form\Account\Type\QuickTransactionType;
 use App\Repository\Account\AccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sonata\BlockBundle\Block\BlockContextInterface;
-use Sonata\BlockBundle\Block\Service\AbstractBlockService;
-use Sonata\BlockBundle\Form\Mapper\FormMapper;
 use Sonata\BlockBundle\Meta\Metadata;
 use Sonata\BlockBundle\Meta\MetadataInterface;
 use Sonata\BlockBundle\Model\BlockInterface;
-use Sonata\Form\Type\ImmutableArrayType;
 use Sonata\Form\Validator\ErrorElement;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Twig\Environment;
@@ -31,9 +25,8 @@ use Twig\Environment;
 /**
  * Quick add transaction to configured account block.
  */
-final class QuickTransactionBlock extends AbstractBlockService implements
-    BlockServiceInterface,
-    EditableBlockService
+final class QuickTransactionBlock extends AbstractAccountBlock implements
+    BlockServiceInterface
 {
 
     /**
@@ -50,50 +43,23 @@ final class QuickTransactionBlock extends AbstractBlockService implements
         private readonly RequestStack $requestStack,
         private readonly EntityManagerInterface $manager,
     ) {
-        parent::__construct($twig);
+        parent::__construct($twig, $this->accountRepository);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function configureSettings(OptionsResolver $resolver): void
+    protected function getTemplate(): string
     {
-        $resolver->setDefaults([
-            'account' => null,
-            'title' => 'Account.block.quick_transaction.title',
-            'template' => 'block/Account/quick_transaction.block.html.twig',
-        ]);
+        return 'block/Account/quick_transaction.block.html.twig';
     }
 
     /**
      * {@inheritDoc}
      */
-    public function configureEditForm(
-        FormMapper $form,
-        BlockInterface $block
-    ): void {
-        $form->add('settings', ImmutableArrayType::class, [
-            'keys' => [
-                [
-                    'account',
-                    EntityType::class,
-                    [
-                        'class' => Account::class,
-                    ],
-                ],
-            ],
-            'translation_domain' => 'admin',
-        ]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function configureCreateForm(
-        FormMapper $form,
-        BlockInterface $block
-    ): void {
-        $this->configureCreateForm($form, $block);
+    protected function getTitle(): string
+    {
+        return 'Account.block.quick_transaction.title';
     }
 
     /**
@@ -178,4 +144,5 @@ final class QuickTransactionBlock extends AbstractBlockService implements
             $transaction,
         );
     }
+
 }

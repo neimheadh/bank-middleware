@@ -2,3 +2,4 @@ sonata_block:
     http_cache: false
     blocks:
         App\Block\Account\QuickTransactionBlock: ~
+        App\Block\Account\AccountBalanceBlock: ~

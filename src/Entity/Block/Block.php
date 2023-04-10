@@ -31,10 +31,22 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
             type: ChoiceType::class,
             options: [
                 'choices' => [
-                    'dashboard' => 'dashboard',
-                    'list' => 'list',
-                    'show' => 'show',
-                    'edit' => 'edit',
+                    'dashboard' => Block::TYPE_DASHBOARD,
+                    'list' => Block::TYPE_LIST,
+                    'show' => Block::TYPE_SHOW,
+                    'edit' => Block::TYPE_EDIT,
+                ],
+            ]
+        ),
+        'position' => new Sonata\FormField(
+            type: ChoiceType::class,
+            options: [
+                'choices' => [
+                    'top' => Block::POSITION_TOP,
+                    'left' => Block::POSITION_LEFT,
+                    'center' => Block::POSITION_CENTER,
+                    'right' => Block::POSITION_RIGHT,
+                    'bottom' => Block::POSITION_BOTTOM,
                 ],
             ]
         ),
@@ -47,6 +59,51 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 class Block implements EntityInterface, Stringable
 {
 
+    /**
+     * Block bottom position.
+     */
+    public const POSITION_BOTTOM = 5;
+
+    /**
+     * Block center position.
+     */
+    public const POSITION_CENTER = 3;
+
+    /**
+     * Block left position.
+     */
+    public const POSITION_LEFT = 2;
+
+    /**
+     * Block right position.
+     */
+    public const POSITION_RIGHT = 4;
+
+    /**
+     * Block top position.
+     */
+    public const POSITION_TOP = 1;
+
+    /**
+     * Dashboard block.
+     */
+    public const TYPE_DASHBOARD = 1;
+
+    /**
+     * Edit block.
+     */
+    public const TYPE_EDIT = 2;
+
+    /**
+     * List block.
+     */
+    public const TYPE_LIST = 3;
+
+    /**
+     * Show block.
+     */
+    public const TYPE_SHOW = 4;
+
     use EntityTrait;
 
     /**
@@ -56,6 +113,14 @@ class Block implements EntityInterface, Stringable
      */
     #[ORM\Column(type: 'string', length: 256)]
     private ?string $class = null;
+
+    /**
+     * Block position.
+     *
+     * @var int|null
+     */
+    #[ORM\Column(type: 'smallint')]
+    private ?int $position = null;
 
     /**
      * Block settings.
@@ -68,10 +133,10 @@ class Block implements EntityInterface, Stringable
     /**
      * Block type.
      *
-     * @var string|null
+     * @var int|null
      */
-    #[ORM\Column(type: 'string', length: 256)]
-    private ?string $type = null;
+    #[ORM\Column(type: 'smallint')]
+    private ?int $type = null;
 
     /**
      * {@inheritDoc}
@@ -92,6 +157,16 @@ class Block implements EntityInterface, Stringable
     }
 
     /**
+     * Get position.
+     *
+     * @return int|null
+     */
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    /**
      * Get block settings.
      *
      * @return array|null
@@ -104,9 +179,9 @@ class Block implements EntityInterface, Stringable
     /**
      * Get type.
      *
-     * @return string|null
+     * @return int|null
      */
-    public function getType(): ?string
+    public function getType(): ?int
     {
         return $this->type;
     }
@@ -141,6 +216,20 @@ class Block implements EntityInterface, Stringable
     }
 
     /**
+     * Set position.
+     *
+     * @param int|null $position Position.
+     *
+     * @return $this
+     */
+    public function setPosition(?int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
      * Set block settings.
      *
      * @param array|null $settings Block settings.
@@ -157,11 +246,11 @@ class Block implements EntityInterface, Stringable
     /**
      * Set type.
      *
-     * @param string|null $type Block type.
+     * @param int|null $type Block type.
      *
      * @return $this
      */
-    public function setType(?string $type): self
+    public function setType(?int $type): self
     {
         $this->type = $type;
 
