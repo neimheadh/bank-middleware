@@ -7,6 +7,7 @@ use App\Repository\Currency\CurrencyRepository;
 use CurrencyApi\CurrencyApi\CurrencyApiClient;
 use CurrencyApi\CurrencyApi\CurrencyApiException;
 use Doctrine\Persistence\ObjectManager;
+use RuntimeException;
 use Symfony\Component\Console\Helper\ProgressBar;
 
 /**
@@ -68,6 +69,12 @@ class CurrencyApiManager
     {
         $data = $this->client->currencies([]);
         $currencies = [];
+
+        if (!isset($data['data'])) {
+            throw new RuntimeException(
+                $data['message'] ?? 'Error retrieving currencies data.',
+            );
+        }
 
         $progress?->start(count($data['data']));
         foreach ($data['data'] ?? [] as $datum) {
