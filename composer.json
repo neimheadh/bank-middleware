@@ -11,6 +11,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.14",
         "everapi/currencyapi-php": "dev-master",
+        "neimheadh/solid-bundle": "dev-develop",
         "neimheadh/sonata-annotation-bundle": "dev-develop",
         "sonata-project/doctrine-orm-admin-bundle": "^4.10",
         "sonata-project/form-extensions": "^1.18",

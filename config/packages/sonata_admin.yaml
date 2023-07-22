@@ -6,6 +6,8 @@ sonata_admin:
     groups:
       Account:
         icon: 'fas fa-university'
+      Schedule:
+        icon: 'fas fa-clock'
       Budget:
         icon: 'fas fa-piggy-bank'
       ThirdParty:

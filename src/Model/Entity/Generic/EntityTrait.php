@@ -2,29 +2,15 @@
 
 namespace App\Model\Entity\Generic;
 
-use Doctrine\ORM\Mapping as ORM;
+use Neimheadh\SolidBundle\Doctrine\Entity\Date\DatedEntityTrait;
+use Neimheadh\SolidBundle\Doctrine\Entity\Index\UniquePrimaryEntityTrait;
 
 /**
  * Application entity trait.
  */
 trait EntityTrait
 {
+
+    use UniquePrimaryEntityTrait;
     use DatedEntityTrait;
-
-    /**
-     * Entity id.
-     */
-    #[ORM\Id]
-    #[ORM\Column(type: 'integer')]
-    #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private ?int $id = null;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
 }

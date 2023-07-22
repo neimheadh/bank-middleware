@@ -2,6 +2,8 @@
 
 namespace App\Model\Entity\Generic;
 
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
+
 /**
  * Entity with plural name.
  */

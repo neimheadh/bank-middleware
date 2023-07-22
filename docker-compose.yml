@@ -18,6 +18,7 @@ services:
     container_name: bank_middleware_database
     networks:
       - back
+      - reverse-proxy
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}

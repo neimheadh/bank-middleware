@@ -1,15 +1,12 @@
 <?php
 
-namespace App\DataFixtures;
+namespace App\DataFixtures\Import;
 
-use App\Block\Account\QuickTransactionBlock;
 use App\Entity\Account\Account;
 use App\Entity\Account\Transaction;
-use App\Entity\Block\Block;
 use App\Entity\Currency\Currency;
 use App\Entity\Import\Profile;
 use App\Entity\ThirdParty\ThirdParty;
-use App\Entity\User\User;
 use App\Import\Processor\DataMapProcessor;
 use App\Import\Processor\Parser\DateParser;
 use App\Import\Processor\Parser\EntityReferenceParser;
@@ -21,9 +18,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
 /**
- * Load fixtures.
+ * Import profile fixtures loader.
  */
-class AppFixtures extends Fixture
+class ProfileFixture extends Fixture
 {
 
     /**
@@ -31,51 +28,6 @@ class AppFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        $user = new User();
-        $user->setUsername('test');
-        $user->setEmail('test@example.com');
-        $user->setEnabled(true);
-        $user->setPlainPassword('test');
-        $manager->persist($user);
-
-        $usd = new Currency();
-        $usd->setSymbol('$');
-        $usd->setName('Dollar');
-        $usd->setNativeSymbol('$');
-        $usd->setDecimalDigits(2);
-        $usd->setRounded(2);
-        $usd->setCode('USD');
-        $usd->setPluralName('Dollars');
-        $usd->setUsdExchangeRate(1);
-        $manager->persist($usd);
-
-        $eur = new Currency();
-        $eur->setSymbol('€');
-        $eur->setName('Euro');
-        $eur->setNativeSymbol('€');
-        $eur->setDecimalDigits(2);
-        $eur->setRounded(2);
-        $eur->setCode('EUR');
-        $eur->setPluralName('Euros');
-        $eur->setUsdExchangeRate(1.09);
-        $eur->setDefault(true);
-        $manager->persist($eur);
-        $manager->flush();
-
-        $account = new Account();
-        $account->setName('Test');
-        $account->setCode('TST');
-        $account->setBalance(0);
-        $manager->persist($account);
-        $manager->flush();
-
-        $block = new Block();
-        $block->setClass(QuickTransactionBlock::class);
-        $block->setType(Block::TYPE_DASHBOARD);
-        $block->setPosition(Block::POSITION_TOP);
-        $block->setSettings(['account' => $account->getId()]);
-        $manager->persist($block);
-
         $profile = new Profile();
         $profile->setCode('FNBP');
         $profile->setName('Import csv FNBP');
@@ -168,7 +120,6 @@ class AppFixtures extends Fixture
         );
         $profile->setWriterConfiguration([]);
         $manager->persist($profile);
-
 
         $manager->flush();
     }

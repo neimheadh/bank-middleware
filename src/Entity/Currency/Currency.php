@@ -4,14 +4,14 @@ namespace App\Entity\Currency;
 
 use App\Model\Entity\Generic\CodeEntityInterface;
 use App\Model\Entity\Generic\CodeEntityTrait;
-use App\Model\Entity\Generic\DatedEntityInterface;
-use App\Model\Entity\Generic\DatedEntityTrait;
 use App\Model\Entity\Generic\DefaultEntityInterface;
 use App\Model\Entity\Generic\DefaultEntityTrait;
 use App\Model\Entity\Generic\PluralNameEntityInterface;
 use App\Model\Entity\Generic\PluralNameEntityTrait;
 use App\Repository\Currency\CurrencyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Neimheadh\SolidBundle\Doctrine\Entity\Date\DatedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Date\DatedEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
@@ -82,14 +82,6 @@ class Currency implements DatedEntityInterface,
      */
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $decimalDigits = null;
-
-    /**
-     * Currency name.
-     *
-     * @var string|null
-     */
-    #[ORM\Column(type: 'string', length: 256, nullable: true)]
-    private ?string $name = null;
 
     /**
      * Currency symbol in native language.

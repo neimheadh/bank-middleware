@@ -8,10 +8,10 @@ use App\Model\Entity\Generic\CodeEntityInterface;
 use App\Model\Entity\Generic\CodeEntityTrait;
 use App\Model\Entity\Generic\EntityInterface;
 use App\Model\Entity\Generic\EntityTrait;
-use App\Model\Entity\Generic\NamedEntityInterface;
-use App\Model\Entity\Generic\NamedEntityTrait;
 use App\Repository\Import\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**

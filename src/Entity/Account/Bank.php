@@ -4,10 +4,10 @@ namespace App\Entity\Account;
 
 use App\Model\Entity\Generic\EntityInterface;
 use App\Model\Entity\Generic\EntityTrait;
-use App\Model\Entity\Generic\NamedEntityInterface;
-use App\Model\Entity\Generic\NamedEntityTrait;
 use App\Repository\Account\BankRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
@@ -26,6 +26,7 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 class Bank implements EntityInterface,
                       NamedEntityInterface
 {
+
     use EntityTrait;
     use NamedEntityTrait;
 }

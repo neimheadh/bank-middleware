@@ -7,10 +7,10 @@ use App\Model\Entity\Currency\BalancedEntityInterface;
 use App\Model\Entity\Currency\BalancedEntityTrait;
 use App\Model\Entity\Generic\EntityInterface;
 use App\Model\Entity\Generic\EntityTrait;
-use App\Model\Entity\Generic\NamedEntityInterface;
-use App\Model\Entity\Generic\NamedEntityTrait;
-use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 use Doctrine\ORM\Mapping as ORM;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
+use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
  * Budget.
@@ -23,6 +23,7 @@ class Budget implements EntityInterface,
                         NamedEntityInterface,
                         BalancedEntityInterface
 {
+
     use EntityTrait;
     use NamedEntityTrait;
     use BalancedEntityTrait;

@@ -3,6 +3,7 @@
 namespace App\Model\Entity\Generic;
 
 use Doctrine\ORM\Mapping as ORM;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
 
 /**
  * Entity with plural name trait.

@@ -11,14 +11,14 @@ use App\Model\Entity\Currency\BalancedEntityInterface;
 use App\Model\Entity\Currency\BalancedEntityTrait;
 use App\Model\Entity\Generic\EntityInterface;
 use App\Model\Entity\Generic\EntityTrait;
-use App\Model\Entity\Generic\NamedEntityInterface;
-use App\Model\Entity\Generic\NamedEntityTrait;
 use App\Model\Entity\ThirdParty\Link\ThirdPartyManyToOneInterface;
 use App\Model\Entity\ThirdParty\Link\ThirdPartyManyToOneTrait;
 use App\Repository\Account\TransactionRepository;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
@@ -107,14 +107,6 @@ class Transaction implements EntityInterface,
     )]
     #[ORM\JoinColumn(name: 'account_id', nullable: false, onDelete: 'CASCADE')]
     private ?Account $account = null;
-
-    /**
-     * Transaction name.
-     *
-     * @var string|null
-     */
-    #[ORM\Column(type: 'string', length: 256, nullable: true)]
-    private ?string $name = null;
 
     /**
      * Transaction procession date.
