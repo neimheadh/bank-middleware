@@ -2254,12 +2254,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/neimheadh/SolidBundle.git",
-                "reference": "cee04e470ed368438c5d47a5bcf58907f4e9c2ba"
+                "reference": "5e901fc05f6fc4f5ad7fefb54c6b51b17b08e211"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neimheadh/SolidBundle/zipball/cee04e470ed368438c5d47a5bcf58907f4e9c2ba",
-                "reference": "cee04e470ed368438c5d47a5bcf58907f4e9c2ba",
+                "url": "https://api.github.com/repos/neimheadh/SolidBundle/zipball/5e901fc05f6fc4f5ad7fefb54c6b51b17b08e211",
+                "reference": "5e901fc05f6fc4f5ad7fefb54c6b51b17b08e211",
                 "shasum": ""
             },
             "require": {
@@ -2300,7 +2300,7 @@
                 "issues": "https://github.com/neimheadh/SolidBundle/issues",
                 "source": "https://github.com/neimheadh/SolidBundle/tree/develop"
             },
-            "time": "2023-07-22T09:49:33+00:00"
+            "time": "2023-07-25T14:16:41+00:00"
         },
         {
             "name": "neimheadh/sonata-annotation-bundle",

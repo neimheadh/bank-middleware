@@ -48,7 +48,7 @@ class CurrencyFixture extends Fixture
         $eur->setCode('EUR');
         $eur->setPluralName('Euros');
         $eur->setUsdExchangeRate(1.09);
-        $eur->setDefault(true);
+        $eur->setIsDefault();
         $this->addReference(self::EUR_REFERENCE, $eur);
         $manager->persist($eur);
 

@@ -13,6 +13,6 @@ trait DefaultEntityRepositoryTrait
      */
     public function findDefault(): ?object
     {
-        return $this->findOneBy(['default' => true]);
+        return $this->findOneBy(['isDefault' => true]);
     }
 }

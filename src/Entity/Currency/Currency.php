@@ -4,14 +4,14 @@ namespace App\Entity\Currency;
 
 use App\Model\Entity\Generic\CodeEntityInterface;
 use App\Model\Entity\Generic\CodeEntityTrait;
-use App\Model\Entity\Generic\DefaultEntityInterface;
-use App\Model\Entity\Generic\DefaultEntityTrait;
 use App\Model\Entity\Generic\PluralNameEntityInterface;
 use App\Model\Entity\Generic\PluralNameEntityTrait;
 use App\Repository\Currency\CurrencyRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Neimheadh\SolidBundle\Doctrine\Entity\Date\DatedEntityInterface;
 use Neimheadh\SolidBundle\Doctrine\Entity\Date\DatedEntityTrait;
+use Neimheadh\SolidBundle\Doctrine\Entity\Join\DefaultJointEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Join\DefaultJointEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
@@ -39,13 +39,13 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 )]
 class Currency implements DatedEntityInterface,
                           CodeEntityInterface,
-                          DefaultEntityInterface,
+                          DefaultJointEntityInterface,
                           PluralNameEntityInterface
 {
 
     use DatedEntityTrait;
     use CodeEntityTrait;
-    use DefaultEntityTrait;
+    use DefaultJointEntityTrait;
     use PluralNameEntityTrait;
 
     /**
