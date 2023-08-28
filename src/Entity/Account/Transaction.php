@@ -17,8 +17,8 @@ use App\Repository\Account\TransactionRepository;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
-use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
@@ -81,7 +81,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
     DatagridInterface::SORT_ORDER => 'DESC',
 ])]
 class Transaction implements EntityInterface,
-                             NamedEntityInterface,
+                             StringableNamedEntityInterface,
                              AccountManyToOneInterface,
                              BalancedEntityInterface,
                              ThirdPartyManyToOneInterface,
@@ -89,7 +89,7 @@ class Transaction implements EntityInterface,
 {
 
     use EntityTrait;
-    use NamedEntityTrait;
+    use StringableNamedEntityTrait;
     use AccountManyToOneTrait;
     use BalancedEntityTrait;
     use ThirdPartyManyToOneTrait;

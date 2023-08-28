@@ -13,8 +13,8 @@ use App\Repository\Account\AccountRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
-use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
@@ -49,13 +49,13 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 #[ORM\EntityListeners([AccountEntityListener::class])]
 #[ORM\Table(name: 'app_account_account')]
 class Account implements EntityInterface,
-                         NamedEntityInterface,
+                         StringableNamedEntityInterface,
                          BalancedEntityInterface,
                          CodeEntityInterface
 {
 
     use EntityTrait;
-    use NamedEntityTrait;
+    use StringableNamedEntityTrait;
     use BalancedEntityTrait;
     use CodeEntityTrait;
 
