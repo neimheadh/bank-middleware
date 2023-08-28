@@ -1,0 +1,10 @@
+{% extends '@SonataAdmin/CRUD/base_list_field.html.twig' %}
+
+{% block field %}
+    {% if value.y %}{{ value.y }} {{ (value.y > 1 ? 'years'   : 'year')    | trans }}{% endif %}
+    {% if value.m %}{{ value.m }} {{ (value.m > 1 ? 'months'  : 'month')   | trans }}{% endif %}
+    {% if value.d %}{{ value.d }} {{ (value.d > 1 ? 'days'    : 'day')     | trans }}{% endif %}
+    {% if value.h %}{{ value.h }} {{ (value.h > 1 ? 'hours'   : 'hour')    | trans }}{% endif %}
+    {% if value.i %}{{ value.i }} {{ (value.i > 1 ? 'minutes' : 'minute')  | trans }}{% endif %}
+    {% if value.s %}{{ value.s }} {{ (value.s > 1 ? 'seconds' : 'second')  | trans }}{% endif %}
+{% endblock %}

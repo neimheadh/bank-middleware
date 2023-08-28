@@ -2,8 +2,8 @@
 
 namespace App\Model\Repository\Schedule;
 
+use App\Model\Entity\Schedule\ScheduleEntityInterface;
 use DateTime;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -15,11 +15,20 @@ trait ScheduleEntityRepositoryTrait
     /**
      * {@inheritDoc}
      */
-    public function findScheduled(): array
+    public function findScheduled(?DateTime $now = null): array
     {
-        return $this->buildScheduledQuery()
-            ->getQuery()
-            ->execute();
+        $now = $now ?: new DateTime();
+
+        return array_filter(
+            $this->buildScheduledQuery($now)
+                ->getQuery()
+                ->execute(),
+            fn(ScheduleEntityInterface $entity) => $entity->getLastExecution(
+                ) === null
+                || $entity->getLastExecution()->add(
+                    $entity->getInterval()
+                ) < $now,
+        );
     }
 
     /**
@@ -27,27 +36,18 @@ trait ScheduleEntityRepositoryTrait
      *
      * @return QueryBuilder
      */
-    protected function buildScheduledQuery(): QueryBuilder
+    protected function buildScheduledQuery(DateTime $now): QueryBuilder
     {
-        $now = new DateTime();
         $qb = $this->createQueryBuilder('e');
 
-        return $qb->where('e.startAt >= :now')
+        return $qb->where('e.startAt <= :now')
             ->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->isNull('e.finishAt'),
-                    $qb->expr()->lte('e.finishAt', ':now'),
+                    $qb->expr()->gte('e.finishAt', ':now'),
                 ),
-            )
-            ->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->isNull('e.lastExecution'),
-                    $qb->expr()->gte(
-                        $qb->expr()->sum('e.lastExecution', 'e.interval'),
-                        ':now'
-                    )
-                )
             )
             ->setParameter('now', $now);
     }
+
 }

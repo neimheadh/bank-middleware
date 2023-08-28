@@ -1,0 +1,5 @@
+services:
+  App\Schedule\Generator\:
+    resource: '../../src/Schedule/Generator/*'
+    autowire: true
+    public: true

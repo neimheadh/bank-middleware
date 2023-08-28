@@ -32,11 +32,11 @@ interface ScheduleEntityInterface extends ScheduleConfigurationInterface
     /**
      * Set schedule execution interval.
      *
-     * @param DateInterval|null $interval Schedule execution interval.
+     * @param DateInterval $interval Schedule execution interval.
      *
      * @return $this
      */
-    public function setInterval(?DateInterval $interval): self;
+    public function setInterval(DateInterval $interval): self;
 
     /**
      * Set schedule start date.

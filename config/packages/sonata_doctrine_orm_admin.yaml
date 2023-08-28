@@ -4,3 +4,4 @@ sonata_doctrine_orm_admin:
       list:
         balance: 'list/balance.html.twig'
         boolean: 'list/boolean.html.twig'
+        dateinterval: 'list/dateinterval.html.twig'

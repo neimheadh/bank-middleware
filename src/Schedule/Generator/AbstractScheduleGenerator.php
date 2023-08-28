@@ -49,8 +49,8 @@ abstract class AbstractScheduleGenerator implements
         $end = $configuration->getFinishAt();
         $interval = $configuration->getInterval();
 
-        return $start >= $now
-            && $end <= $now
+        return $start <= $now
+            && ($end === null || $end >= $now)
             && ($last === null || $last->add($interval) <= $now);
     }
 

@@ -67,7 +67,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
         'name' => new Sonata\ListField(),
         'startAt' => new Sonata\ListField(),
         'finishAt' => new Sonata\ListField(),
-        'interval' => new Sonata\ListField(),
+        'interval' => new Sonata\ListField(type: 'dateinterval'),
         'lastExecution' => new Sonata\ListField(
             type: FieldDescriptionInterface::TYPE_DATETIME
         ),

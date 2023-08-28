@@ -1,3 +1,18 @@
+# Time
+
+day:     jour
+days:    jours
+hour:    heure
+hours:   heures
+minute:  minute
+minutes: minutes
+month:   mois
+months:  mois
+second:  seconde
+seconds: secondes
+year:    année
+years:   années
+
 Profile:
   form:
     group:

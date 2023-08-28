@@ -2,8 +2,6 @@
 
 namespace App\Command\Schedule;
 
-use App\Entity\Schedule\TransactionSchedule;
-use App\Model\Entity\Schedule\ScheduleEntityInterface;
 use App\Model\Repository\Schedule\ScheduleEntityRepositoryInterface;
 use App\Repository\Schedule\TransactionScheduleRepository;
 use App\Schedule\Generator\ScheduleGeneratorInterface;
@@ -57,7 +55,7 @@ final class ScheduleExecuteCommand extends Command
             $items = $repository->findScheduled();
             $output->writeln(
                 sprintf(
-                    '<comments>%s</comments> %s.',
+                    '<comment>%s</comment> %s.',
                     count($items),
                     $name
                 )

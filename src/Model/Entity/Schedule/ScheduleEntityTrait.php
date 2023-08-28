@@ -10,6 +10,9 @@ use Exception;
 
 /**
  * Schedule entity trait.
+ *
+ * @todo See if it's possible to record the date interval in several fields on
+ *       SGBD driver side.
  */
 trait ScheduleEntityTrait
 {
@@ -39,16 +42,76 @@ trait ScheduleEntityTrait
     private ?int $lastExecution = null;
 
     /**
-     * Schedule execution interval.
+     * Schedule execution interval day.
      *
-     * @var string|null
+     * @var int
      */
     #[ORM\Column(
-        type: 'integer',
-        length: 16,
+        name: 'interval_day',
+        type: 'smallint',
         options: ['default' => 0, 'unsigned' => true],
     )]
-    private ?int $interval = null;
+    private int $intervalDay = 0;
+
+    /**
+     * Schedule execution interval hours.
+     *
+     * @var int
+     */
+    #[ORM\Column(
+        name: 'interval_hour',
+        type: 'smallint',
+        options: ['default' => 0, 'unsigned' => true],
+    )]
+    private int $intervalHour = 0;
+
+    /**
+     * Schedule execution interval minutes.
+     *
+     * @var int
+     */
+    #[ORM\Column(
+        name: 'interval_minute',
+        type: 'smallint',
+        options: ['default' => 0, 'unsigned' => true],
+    )]
+    private int $intervalMinute = 0;
+
+    /**
+     * Schedule execution interval months.
+     *
+     * @var int
+     */
+    #[ORM\Column(
+        name: 'interval_month',
+        type: 'smallint',
+        options: ['default' => 0, 'unsigned' => true],
+    )]
+    private int $intervalMonth = 0;
+
+    /**
+     * Schedule execution interval seconds.
+     *
+     * @var int
+     */
+    #[ORM\Column(
+        name: 'interval_second',
+        type: 'smallint',
+        options: ['default' => 0, 'unsigned' => true],
+    )]
+    private int $intervalSecond = 0;
+
+    /**
+     * Schedule execution interval years.
+     *
+     * @var int
+     */
+    #[ORM\Column(
+        name: 'interval_year',
+        type: 'smallint',
+        options: ['default' => 0, 'unsigned' => true],
+    )]
+    private int $intervalYear = 0;
 
     /**
      * Schedule start date.
@@ -80,15 +143,22 @@ trait ScheduleEntityTrait
      */
     public function getInterval(): ?DateInterval
     {
-        $y = floor($this->interval);
-
         try {
-            $interval = new DateInterval('PT' . $this->interval . 'S');
-            dd($interval);
+            return new DateInterval(
+                sprintf(
+                    'P%sY%sM%sDT%sH%sM%sS',
+                    $this->intervalYear,
+                    $this->intervalMonth,
+                    $this->intervalDay,
+                    $this->intervalHour,
+                    $this->intervalMinute,
+                    $this->intervalSecond,
+                )
+            );
         } catch (Exception) {
         }
 
-        return $interval ?? null;
+        return null;
     }
 
     /**
@@ -127,20 +197,14 @@ trait ScheduleEntityTrait
     /**
      * {@inheritDoc}
      */
-    public function setInterval(?DateInterval $interval): self
+    public function setInterval(DateInterval $interval): self
     {
-        if ($interval === null) {
-            $this->interval = null;
-
-            return $this;
-        }
-
-        $this->interval = $interval->s
-            + $interval->i * 60
-            + $interval->h * 60 * 60
-            + $interval->d * 60 * 60 * 24
-            + $interval->m * 60 * 60 * 24 * 30
-            + $interval->y * 60 * 60 * 24 * 365;
+        $this->intervalYear = $interval->y;
+        $this->intervalMonth = $interval->m;
+        $this->intervalDay = $interval->d;
+        $this->intervalHour = $interval->h;
+        $this->intervalMinute = $interval->i;
+        $this->intervalSecond = $interval->s;
 
         return $this;
     }

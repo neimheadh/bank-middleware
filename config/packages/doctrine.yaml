@@ -14,13 +14,22 @@ doctrine:
         driver:         '%env(resolve:DATABASE_DRIVER)%'
         charset:        '%env(resolve:DATABASE_CHARSET)%'
         server_version: '%env(resolve:DATABASE_VERSION)%'
+
     orm:
         auto_generate_proxy_classes: true
-        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
+        dql:
+            string_functions:
+                YEAR: DoctrineExtensions\Query\Sqlite\Year
+                MONTH: DoctrineExtensions\Query\Sqlite\Month
+                DAY: DoctrineExtensions\Query\Sqlite\Day
+                HOUR: DoctrineExtensions\Query\Sqlite\Hour
+                MINUTE: DoctrineExtensions\Query\Sqlite\Minute
+                SECOND: DoctrineExtensions\Query\Sqlite\Second
         mappings:
             App:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
