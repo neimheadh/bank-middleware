@@ -3,6 +3,7 @@
 namespace App\Entity\Block;
 
 use App\Form\Generic\Type\ClassChoiceType;
+use App\Form\Generic\Type\YamlType;
 use App\Model\Entity\Generic\EntityInterface;
 use App\Model\Entity\Generic\EntityTrait;
 use App\Repository\Block\BlockRepository;
@@ -12,7 +13,6 @@ use Sonata\BlockBundle\Model\Block as SonataBlock;
 use Sonata\BlockBundle\Model\BlockInterface;
 use Stringable;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 /**
  * Sonata block.
@@ -51,7 +51,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
             ]
         ),
         'settings' => new Sonata\FormField(
-            type: TextareaType::class,
+            type: YamlType::class,
             options: ['required' => false]
         ),
     ]
