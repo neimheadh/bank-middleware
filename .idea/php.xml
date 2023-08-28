@@ -119,7 +119,6 @@
       <path value="$PROJECT_DIR$/vendor/sonata-project/admin-bundle" />
       <path value="$PROJECT_DIR$/vendor/sonata-project/doctrine-orm-admin-bundle" />
       <path value="$PROJECT_DIR$/vendor/sonata-project/block-bundle" />
-      <path value="$PROJECT_DIR$/vendor/sonata-project/cache" />
       <path value="$PROJECT_DIR$/vendor/sonata-project/doctrine-extensions" />
       <path value="$PROJECT_DIR$/vendor/sonata-project/exporter" />
       <path value="$PROJECT_DIR$/vendor/sonata-project/twig-extensions" />

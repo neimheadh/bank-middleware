@@ -8,5 +8,10 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
 
+// Import Prism
+import 'prismjs/prism';
+import 'prismjs/components/prism-yaml';
+import './plugins/prism-live';
+
 // start the Stimulus application
 import './bootstrap';
