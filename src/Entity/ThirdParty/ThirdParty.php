@@ -7,8 +7,8 @@ use App\Model\Entity\Generic\EntityInterface;
 use App\Model\Entity\Generic\EntityTrait;
 use App\Repository\ThirdParty\ThirdPartyRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
-use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
@@ -22,9 +22,9 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
         'name' => new Sonata\FormField(),
     ],
 )]
-class ThirdParty implements EntityInterface, NamedEntityInterface
+class ThirdParty implements EntityInterface, StringableNamedEntityInterface
 {
 
     use EntityTrait;
-    use NamedEntityTrait;
+    use StringableNamedEntityTrait;
 }

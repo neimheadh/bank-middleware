@@ -2,16 +2,16 @@
 
 namespace App\Entity\Import;
 
-use App\Form\Generic\Type\ArrayType;
 use App\Form\Generic\Type\ClassChoiceType;
+use App\Form\Generic\Type\YamlType;
 use App\Model\Entity\Generic\CodeEntityInterface;
 use App\Model\Entity\Generic\CodeEntityTrait;
 use App\Model\Entity\Generic\EntityInterface;
 use App\Model\Entity\Generic\EntityTrait;
 use App\Repository\Import\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
-use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
@@ -34,7 +34,7 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
             ],
         ),
         'readerConfiguration' => new Sonata\FormField(
-            type: ArrayType::class,
+            type: YamlType::class,
             position: 4
         ),
         'processor' => new Sonata\FormField(
@@ -46,7 +46,7 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
             ],
         ),
         'processorConfiguration' => new Sonata\FormField(
-            type: ArrayType::class,
+            type: YamlType::class,
             position: 6
         ),
         'writer' => new Sonata\FormField(
@@ -58,7 +58,7 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
             ],
         ),
         'writerConfiguration' => new Sonata\FormField(
-            type: ArrayType::class,
+            type: YamlType::class,
             position: 8
         ),
     ],
@@ -68,12 +68,12 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
     ]
 )]
 class Profile implements EntityInterface,
-                         NamedEntityInterface,
+                         StringableNamedEntityInterface,
                          CodeEntityInterface
 {
 
     use EntityTrait;
-    use NamedEntityTrait;
+    use StringableNamedEntityTrait;
     use CodeEntityTrait;
 
     /**

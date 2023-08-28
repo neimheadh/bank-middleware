@@ -17,8 +17,8 @@ use App\Model\Entity\ThirdParty\Link\ThirdPartyManyToOneTrait;
 use App\Repository\Schedule\TransactionScheduleRepository;
 use App\Schedule\Generator\Account\TransactionScheduleGenerator;
 use Doctrine\ORM\Mapping as ORM;
-use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
-use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 use Sonata\AdminBundle\FieldDescription\FieldDescriptionInterface;
 use Sonata\AdminBundle\Form\Type\ModelAutocompleteType;
@@ -74,7 +74,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateIntervalType;
     ]
 )]
 class TransactionSchedule implements EntityInterface,
-                                     NamedEntityInterface,
+                                     StringableNamedEntityInterface,
                                      AccountManyToOneInterface,
                                      BalancedEntityInterface,
                                      ScheduleEntityInterface,
@@ -83,7 +83,7 @@ class TransactionSchedule implements EntityInterface,
 {
 
     use EntityTrait;
-    use NamedEntityTrait;
+    use StringableNamedEntityTrait;
     use AccountManyToOneTrait;
     use BalancedEntityTrait;
     use ScheduleEntityTrait;

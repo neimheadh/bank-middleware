@@ -10,6 +10,8 @@ use App\Model\Entity\Generic\EntityTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityInterface;
 use Neimheadh\SolidBundle\Doctrine\Entity\Generic\NamedEntityTrait;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityInterface;
+use Neimheadh\SolidBundle\Doctrine\Entity\Generic\StringableNamedEntityTrait;
 use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 
 /**
@@ -20,12 +22,12 @@ use Neimheadh\SonataAnnotationBundle\Annotation\Sonata;
 #[ORM\Table(name: 'app_budget_budget')]
 #[Sonata\Admin]
 class Budget implements EntityInterface,
-                        NamedEntityInterface,
+                        StringableNamedEntityInterface,
                         BalancedEntityInterface
 {
 
     use EntityTrait;
-    use NamedEntityTrait;
+    use StringableNamedEntityTrait;
     use BalancedEntityTrait;
 
     public function __construct()
