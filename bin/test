@@ -1,12 +1,20 @@
 #!/bin/bash
+# shellcheck disable=SC2086
 
 set -e
 DIR=$(dirname ${BASH_SOURCE[0]})
 source "$DIR/.common"
 cd "$DIR/.."
 
-DOCKER_COMPOSE="docker-compose exec php"
+DOCKER_COMPOSE="docker-compose exec php-test"
 
-cmd $DOCKER_COMPOSE php bin/console cache:clear --env=test
-cmd $DOCKER_COMPOSE php bin/console doctrine:schema:update --env=test --force --complete
-cmd $DOCKER_COMPOSE php bin/phpunit "$@"
+cmd $DOCKER_COMPOSE php bin/console cache:clear
+cmd $DOCKER_COMPOSE php bin/console doctrine:database:drop --if-exists --force
+cmd $DOCKER_COMPOSE php bin/console doctrine:database:create
+cmd $DOCKER_COMPOSE php bin/console doctrine:schema:update --force --complete
+cmd $DOCKER_COMPOSE php bin/console doctrine:fixtures:load -n
+#cmd $DOCKER_COMPOSE php bin/phpunit "$@"
+cmd $DOCKER_COMPOSE php bin/console app:debug:coverage:flush
+cmd playwright test --headed --workers 1
+cmd $DOCKER_COMPOSE php bin/console app:debug:coverage:generate var/coverage/test/log
+cmd $DOCKER_COMPOSE php bin/console app:debug:coverage:flush

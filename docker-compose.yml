@@ -1,18 +1,6 @@
 version: "3.7"
 
 services:
-  php:
-    image: neimheadh/bank-api-php:${PHP_VERSION:-8.2}
-    container_name: bank_middleware_php
-    depends_on:
-      - database
-    networks:
-      - back
-    volumes:
-      - .:/var/www/html
-      - ~/.ssh:/home/developer/.ssh:ro
-      - ~/.composer:/home/developer/.composer
-
   database:
     image: postgres:${DATABASE_VERSION}-alpine
     container_name: bank_middleware_database
@@ -32,8 +20,10 @@ services:
     depends_on:
       - php
     networks:
-      - back
-      - reverse-proxy
+      back: ~
+      reverse-proxy:
+        aliases:
+          - bank-middleware.docker.localhost
     working_dir: /var/www/html
     labels:
       - traefik.enable=true
@@ -44,16 +34,65 @@ services:
       - .:/var/www/html
       - ./docker/nginx/config.conf:/etc/nginx/conf.d/default.conf:ro
 
+  nginx-test:
+    image: nginx:${NGINX_VERSION:-latest}
+    container_name: bank_middleware_nginx_test
+    depends_on:
+      - php-test
+    networks:
+      back: ~
+      reverse-proxy:
+        aliases:
+          - bank-middleware-test.docker.localhost
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.bank_middleware_nginx_test.rule=Host(`bank-middleware-test.docker.localhost`)
+      - traefik.http.routers.bank_middleware_nginx_test.middlewares=redirecthttps@file
+      - traefik.docker.network=reverse-proxy
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/config-test.conf:/etc/nginx/conf.d/default.conf:ro
+
   node:
     image: node:${NODE_VERSION:-lts}
     container_name: bank_middleware_node
     user: ${USER_ID:-1000}:${GROUP_ID:-1000}
+    networks:
+      - reverse-proxy
     command:
       - yarn
       - watch
     volumes:
       - .:/var/www/html
     working_dir: /var/www/html
+
+  php:
+    image: neimheadh/bank-api-php:${PHP_VERSION:-8.2}
+    container_name: bank_middleware_php
+    environment:
+      APP_ENV: dev
+    depends_on:
+      - database
+    networks:
+      - back
+    volumes:
+      - .:/var/www/html
+      - ~/.ssh:/home/developer/.ssh:ro
+      - ~/.composer:/home/developer/.composer
+
+  php-test:
+    image: neimheadh/bank-api-php:${PHP_VERSION:-8.2}
+    container_name: bank_middleware_php_test
+    environment:
+      APP_ENV: test
+    depends_on:
+      - database
+    networks:
+      - back
+    volumes:
+      - .:/var/www/html
+      - ~/.ssh:/home/developer/.ssh:ro
+      - ~/.composer:/home/developer/.composer
 
 networks:
   reverse-proxy:

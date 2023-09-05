@@ -18,10 +18,14 @@ class UserFixture extends Fixture
     public function load(ObjectManager $manager): void
     {
         $user = new User();
+        $profile = $user->getProfile();
         $user->setUsername('test');
         $user->setEmail('test@example.com');
         $user->setEnabled(true);
         $user->setPlainPassword('test');
+        $profile->setFirstname('John');
+        $profile->setLastname('Doe');
+        $profile->setEmail('john.doe@example.com');
         $manager->persist($user);
 
         $manager->flush();

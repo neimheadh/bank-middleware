@@ -1,0 +1,17 @@
+<section class="content-header">
+    <div class="sticky-wrapper">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <h2 class="navbar-brand">
+                        {{ 'greeting' | trans({
+                            '{{name}}': app.user.profile.firstname or app.user.profile.lastname
+                                ? (app.user.profile.firstname ~ ' ' ~ app.user.profile.lastname) | trim
+                                : app.user.username
+                        }, 'admin') }}
+                    </h2>
+                </div>
+            </div>
+        </nav>
+    </div>
+</section>

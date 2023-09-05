@@ -1,10 +1,20 @@
 parameters:
+  env(ENABLE_COVERAGE): false
+
   app.event.orm.event_listener.dir: '%kernel.project_dir%/src/Event/ORM/EventListener'
+  app.debug.coverage: '%env(resolve:ENABLE_COVERAGE)%'
 
 services:
   _defaults:
     autowire: true
     autoconfigure: true
+    bind:
+      bool $debugCoverage: '%app.debug.coverage%'
+      string $coverageDir: '%kernel.project_dir%/var/coverage/%kernel.environment%'
+      string $projectDir:  '%kernel.project_dir%'
+
+  App\Event\:
+    resource: '../../src/Event/*'
 
   App\Event\ORM\EntityListener\:
     resource: '../../src/Event/ORM/EntityListener/*'

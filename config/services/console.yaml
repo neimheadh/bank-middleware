@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    autowire: true
+    bind:
+      string $coverageDir: '%kernel.project_dir%/var/coverage/%kernel.environment%'
+
+  App\Command\:
+    resource: '../../src/Command/*'
+    tags:
+      - name: 'console.command'

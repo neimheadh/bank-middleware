@@ -1,5 +1,4 @@
 # Time
-
 day:     jour
 days:    jours
 hour:    heure
@@ -12,6 +11,8 @@ second:  seconde
 seconds: secondes
 year:    année
 years:   années
+
+greeting: 'Bonjour {{name}}'
 
 Profile:
   form:
